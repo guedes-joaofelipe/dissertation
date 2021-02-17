@@ -26,7 +26,7 @@
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
 %%
-\documentclass[dsc,numbers]{coppe}
+\documentclass[msc,numbers,english]{coppe}
 \usepackage{amsmath,amssymb}
 \usepackage{hyperref}
 
@@ -36,18 +36,17 @@
 \begin{document}
   \title{T\'itulo da Tese}
   \foreigntitle{Thesis Title}
-  \author{Nome do Autor}{Sobrenome}
-  \advisor{Prof.}{Nome do Primeiro Orientador}{Sobrenome}{D.Sc.}
-  \advisor{Prof.}{Nome do Segundo Orientador}{Sobrenome}{Ph.D.}
-  \advisor{Prof.}{Nome do Terceiro Orientador}{Sobrenome}{D.Sc.}
+  \author{João Felipe Guedes da}{Silva}
+  \advisor{Prof.}{Luiz Pereira}{Caloba}{Dr.Ing.}
+  \advisor{Prof.}{Natanael Nunes de Moura}{Junior}{D.Sc.}
 
   \examiner{Prof.}{Nome do Primeiro Examinador Sobrenome}{D.Sc.}
   \examiner{Prof.}{Nome do Segundo Examinador Sobrenome}{Ph.D.}
   \examiner{Prof.}{Nome do Terceiro Examinador Sobrenome}{D.Sc.}
   \examiner{Prof.}{Nome do Quarto Examinador Sobrenome}{Ph.D.}
   \examiner{Prof.}{Nome do Quinto Examinador Sobrenome}{Ph.D.}
-  \department{PEC}
-  \date{02}{2011}
+  \department{PEE}
+  \date{\the\month{}}{\the\year{}}
 
   \keyword{Primeira palavra-chave}
   \keyword{Segunda palavra-chave}
@@ -81,68 +80,29 @@
   \printloabbreviations
 
   \mainmatter
-  \chapter{Introdu{\c c}\~ao}
+  \chapter{Introduction}
+  \label{chap:1}
+  \input{chapter1.tex}
 
-  Segundo a norma de formata{\c c}\~ao de teses e disserta{\c c}\~oes do
-  Instituto Alberto Luiz Coimbra de P\'os-gradua{\c c}\~ao e Pesquisa de
-  Engenharia (COPPE), toda abreviatura deve ser definida antes de
-  utilizada.\abbrev{COPPE}{Instituto Alberto Luiz Coimbra de P\'os-gradua{\c
-  c}\~ao e Pesquisa de Engenharia}
+  \chapter{Recommender Systems}
+    \label{chap:2}
+\input{chapter2}
 
-  Do mesmo modo, \'e imprescind\'ivel definir os s\'imbolos, tal como o
-  conjunto dos n\'umeros reais $\mathbb{R}$ e o conjunto vazio $\emptyset$.
-  \symbl{$\mathbb{R}$}{Conjunto dos n\'umeros reais}
-  \symbl{$\emptyset$}{Conjunto vazio}
+  \chapter{Machine Learning and Sparsity}
+    \label{chap:3}
+%\input{chapter3}
 
-  \begin{longquote}
-  Um exemplo de citação longa nas regras da ABNT (4cm de recuo e fonte menor)
-  feita com o ambiente  \verb=longquote= The primary objective of this
-  investigation was to determine the feasibility of detecting corrosion in
-  aluminum Naval aircraft components with neutron radiographic interrogation
-  and the use of standard corrosion penetrameters. Secondary objectives
-  included the determination of the effect of object thickness on image quality,
-  the defining of minimum levels of detectability and a preliminary investigation
-  of a means whereby the degree of corrosion could be quantified with neutron
-  radiographic data. \cite{article-example}
-  \end{longquote}
+  \chapter{Methodology}
+    \label{chap:4}
+%\input{chapter4}
 
-  \chapter{Revis\~ao Bibliogr\'afica}
-
-  Para ilustrar a completa ades\~ao ao estilo de cita{\c c}\~oes e listagem de
-  refer\^encias bibliogr\'aficas, a Tabela~\ref{tab:citation} apresenta cita{\c
-  c}\~oes de alguns dos trabalhos contidos na norma fornecida pela CPGP da
-  COPPE, utilizando o estilo num\'erico.
-
-  \begin{table}[h]
-  \caption{Exemplos de cita{\c c}\~oes utilizando o comando padr\~ao
-    \texttt{\textbackslash cite} do \LaTeX\ e
-    o comando \texttt{\textbackslash citet},
-    fornecido pelo pacote \texttt{natbib}.}
-  \label{tab:citation}
-  \centering
-  {\footnotesize
-  \begin{tabular}{|c|c|c|}
-    \hline
-    Tipo da Publica{\c c}\~ao & \verb|\cite| & \verb|\citet|\\
-    \hline
-    Livro & \cite{book-example} & \citet{book-example}\\
-    Artigo & \cite{article-example} & \citet{article-example}\\
-    Relat\'orio & \cite{techreport-example} & \citet{techreport-example}\\
-    Relat\'orio & \cite{techreport-exampleIn} & \citet{techreport-exampleIn}\\
-    Anais de Congresso & \cite{inproceedings-example} &
-      \citet{inproceedings-example}\\
-    S\'eries & \cite{incollection-example} & \citet{incollection-example}\\
-    Em Livro & \cite{inbook-example} & \citet{inbook-example}\\
-    Disserta{\c c}\~ao de mestrado & \cite{mastersthesis-example} &
-      \citet{mastersthesis-example}\\
-    Tese de doutorado & \cite{phdthesis-example} & \citet{phdthesis-example}\\
-    \hline
-  \end{tabular}}
-  \end{table}
-
-  \chapter{M\'etodo Proposto}
-  \chapter{Resultados e Discuss\~oes}
-  \chapter{Conclus\~oes}
+  \chapter{Experimental Results}
+    \label{chap:5}
+ %  \input{chapter5}
+   
+  \chapter{Conclusions}
+    \label{chap:6}
+  % \input{chapter6}
 
   \backmatter
   \bibliographystyle{coppe-unsrt}

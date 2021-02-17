@@ -1,0 +1,169 @@
+\section{Recommender Systems}
+
+\subsection{Brief History}
+
+    The idea of using a computer-based filtering system according to users' preferences dates back to 
+    the 1960s, when the early techniques were published by the name of ``Selective Dissemination of Information", 
+    where user-prompted keywords where employed to sort and filter documents \cite{1963SDI}. These techniques 
+    based on document representations created the foundations of what came to be known as 
+    content-based recommendations \cite{2016BeyondMatrixCompletion}. 
+
+    Later in the 1980s \textit{Xerox PARC} implemented the \textit{Tapestry} system which was designed to 
+    filter emails according to user-specified rules. Such system even brought the idea of users 
+    classifying other readers' messages, thus introducing the concept of collaborative filtering
+    \cite{2016BeyondMatrixCompletion}.
+
+    By the 2000s the business impact of such systems started drawing attention after 
+    \textit{Amazon.com} launched its online retailer store, whose revenue heavily 
+    relied on its recommendation engine. E-commerce companies then saw 
+    the strategic value of RS in such a way that, in 2007, \textit{Netflix} launched an open challenge 
+    rewarding 1 million dollars to the first team who managed to improve its recommendation engine in 
+    $10 \%$. More than 5000 teams registered for the competition and only in 2009 was the goal achieved 
+    by a group of researches, being a turning point in RS research \cite{2007TheNetflixPrize}.
+    
+    Despite bringing academic research forward, one of the consequences of the challenge was to steer 
+    the focus of research to the task of estimating users' preferences of unseen items or to provide users with 
+    ranked item lists. However, in practice RS can serve a variety of purposes other than these tasks and, 
+    therefore, a broader overview of the recommendation problem is needed in order to understand its 
+    true value.
+
+  \subsection{The Recommendation Problem}
+
+    As defined in \cite{2016BeyondMatrixCompletion}, the recommendation problem can be defined as: 
+
+    \begin{quote}
+      \textit{Find a sequence of conversational actions and item recommendations for each particular user that 
+      optimizes the overall goal over the specified timeframe.}  
+    \end{quote}
+    
+    Consequently, this problem is formed by three components: an overall goal, a set of actions and 
+    an optimization timeframe. 
+
+    The \textbf{overall goal} represents a set of measures to be optimized by the RS. Traditionally, they are designed 
+    as accuracy or ranking metrics, such as precision and recall, but key performance indicators (KPI) have 
+    also been used to define RS optimization goals that are more oriented towards business values \cite{2019BusinessValue}.
+
+    % As we can see, the business value of RS has grown over the years as more companies apply personalizations
+    % as a strategy to improve their relationship with customers. Although is not always feasible to 
+    % measure the true value of a RS, some business value measurements according to  
+    % are presented in Figure \ref{fig:business_value}.
+
+    % \begin{figure}
+    %   \includegraphics[width=\linewidth]{./../img/rs_business_value.png}
+    %   \caption{Overview of RS business value measurement approaches \cite{2019BusinessValue}.}
+    %     \label{fig:business_value}
+    % \end{figure}
+    
+    \textit{Click-through rate} (CTR), for instance, is commonly used as a KPI in news 
+    recommendations as it measures the fraction of recommended items that were clicked. 
+    In \cite{2007GoogleNews} the authors show that personalized recommendations 
+    on Google's news personalization engine led to an increase in clicks by $38\%$ compared 
+    to a baseline that only recommends popular items. 
+
+    % However, merely acessing a recommended item only grasps users' awareness towards products. In terms of appeal, 
+    % \textit{Adoption and conversion} are applied measurements that 
+    % indicates the depth to which users were interested in the clicked item. For instance, 
+    % \textit{YouTube} uses the concept of ``long CTR'' where clicks on recommendations are only counted if the 
+    % user subsequnetly watched a certain fraction of a video \cite{2010YoutubeVideoRS}. 
+
+    % Furthermore, in web-based stores the impact of RS can be measured in terms \textit{sales and revenue}.
+    % According to a statement of Amazon's CEO in 2006, about $35\%$ of their sales originated from recommendation \cite{2019BusinessValue}.
+    % As we can see, the effectiveness of a RS can be measured in each step of a customers' journey on
+    %  a marketing funnel as proposed by \cite{2016kotler}.
+
+    Additionaly, using item distribution aspects to optimization goals can bring revenue to niche products, 
+    highlighting one of the main competitive advantages of digital-based businesses according to the Long-Tail Theory \cite{2006LongTail}. 
+    For example, in \textit{Netflix} the ``Effective Catalog Size'' is a key performance indicator that 
+    expresses the amount of catalog exploration by users \cite{2016NetflixBusinessValue}.
+
+    % Finally, user engagement and behaviour can also be measured with viewability metrics as RS changes users' experience.
+    % \textit{Netflix}, for example, disclosed that ``75\%'' of what people watch is from some sort of recommendation, later 
+    % revealing that the recommendation engine business value is estimated on 1 billion US dollars per year \cite{2017Beyond5stars, 2010YoutubeVideoRS}.
+
+    Besides presenting a list of recommended items, the RS might also take a \textbf{set of actions} in order 
+    to enhance human-computer interface. It is known that the design to which items as presented plays 
+    a fundamental role in recommendation efficiency [21, 28], so displaying suggestions in a proper 
+    frame is also part of the systems' design. 
+    
+    However, the RS might also have better conversational 
+    features towards users other than receiving ratings and presenting items. Examples of such 
+    interactions are: wishlists, giving explanations 
+    about recommendations and showing complementary proposals. This puts the user more into control and 
+    allow for new types of interactions \cite{2016BeyondMatrixCompletion}.  
+
+    Finally, the \textbf{optimization timeframe} over which the goal should be optimized allows to differentiate between 
+    one-shot interactions and longer or event repeated time frames. Such component varies in
+    different business application. For instance, in music streaming applications, recommendations might 
+    need to be repeated whereas in e-commerce scenarios the anonymous users require smaller time frames 
+    be considered. 
+
+
+
+\subsection{Structure}
+
+\subsection{Collaborative Filtering}
+
+    Collaborative Filtering (CF) is a popular family of techniques which underlies in the assumption 
+    that users with similar relevance on past items will probably agree on evaluating future items 
+    the same way [REF, melhorar]. In that sense, users' relevance to items can be estimated by their
+    peers' feedback.
+
+    Given these characteristics of CF, two groups of methods are usually portrayed in the literature: 
+    the memory-based CF and the model-based CF [REF, Survey on Recommendation Systems 2016 Gaudani]. 
+
+  \subsection{Memory-based CF}
+
+    In the memory-based method, the utility matrix is used to calculate the similarity between 
+    users or items based on past ratings or interactions. In that sense, two approaches can be made:
+    the \textit{user-user} CF and the \textit{item-item} CF \cite{2011ekstrand}. 
+    
+    The user-user CF, also known as \textit{k-nearest neighbors} CF tries to find users' peers 
+    whose past evaluation behaviour is similar to the target user. By finding these peers, their 
+    feedback for an item in question is weighted by their level of agreement with the target user.  
+    
+    A critical design decision in implementing this approach is the choice o similarity functions. 
+    Several functions have been proposed in the literature, such as the Pearson correlation, the 
+    Spearman rank correlation or the Cosine similarity. An overview of these functions applied to RS
+    can be found in \cite{2011ekstrand}.
+    
+    While effective, user-user CF suffers from scalability problems when the user-item ratio grows, which
+    tipically happens in e-commerce environments (thus requiring operations on larger similarity matrices).
+    To overcome this issue, \textit{item-item} CF uses similarities between the evaluation patterns 
+    of items. In its overall structure, it is similar to content-based recommendation, but instead of 
+    relying primarily on item's metadata, it deduces items' similarities from user preference patterns \cite{2001sarwar}.
+
+    Several advantages can be listed for the memory-based CF. Given that mostly rely on similarity 
+    functions, their algorithms can be easily implemented. Furthermore, memory-based CF are online 
+    learning models, which provides great advantages to the arrival of new data and, therefore, 
+    to the adaptation of concept drifts to users' preferences [REF]. Finally, explanations about the 
+    recommendations can be provided to users, which has shown to increase users' trust in the system 
+    [REF, ZHENG 2016].
+
+    However, data sparsity poses a great disadvantage to these methods. Since the utility matrix is 
+    sparse in most applications, the efficiency in similarity calculations is compromised by the lack 
+    of sufficient data [REF, AGARRWAL, Recommender SYstems: The textbook 2016]
+    
+    An example of item-item CF was shown in \cite{2003amazon}, where authors use a recommendation 
+    algorithm to personalize the online store for each customer at \textit{Amazon.com}, demonstrating 
+    the scalability advantage of this approach.
+
+  \subsection{Model-based CF}
+
+  Model-based CF rely on data mining and machine learning methods to find underlying patterns on 
+  users' preferences based on their feedback (although users' and items' metadata can be also used to 
+  improve recommendation performance [REF]). 
+
+  [Vantagens]
+
+  [Desvantagens]
+
+  [Exemplos]
+
+
+\subsection{Content-Based Filtering}
+
+
+
+\section{Recommender Systems Evaluation}
+
+Rever artigo "Beyond Matrix Completion" para mais informações
