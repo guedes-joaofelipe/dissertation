@@ -73,6 +73,22 @@ location = {Barcelona, Spain},
 series = {RecSys '10}
 }
 
+@inproceedings{1999AlgorithmicFramework,
+    author = {Herlocker, Jonathan L. and Konstan, Joseph A. and Borchers, Al and Riedl, John},
+    title = {An Algorithmic Framework for Performing Collaborative Filtering},
+    year = {1999},
+    isbn = {1581130961},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/312624.312682},
+    doi = {10.1145/312624.312682},
+    booktitle = {Proceedings of the 22nd Annual International ACM SIGIR Conference on Research and Development in Information Retrieval},
+    pages = {230–237},
+    numpages = {8},
+    location = {Berkeley, California, USA},
+    series = {SIGIR '99}
+}
+
 @article{2016NetflixBusinessValue,
    author = {Gomez-Uribe, Carlos A. and Hunt, Neil},
    title = {The Netflix Recommender System: Algorithms, Business Value, and Innovation},
@@ -91,6 +107,38 @@ series = {RecSys '10}
    articleno = {13},
    numpages = {19},
    keywords = {Recommender systems}
+}
+
+@inproceedings{2008ALSWR,
+    author = {Zhou, Yunhong and Wilkinson, Dennis and Schreiber, Robert and Pan, Rong},
+    title = {Large-Scale Parallel Collaborative Filtering for the Netflix Prize},
+    year = {2008},
+    isbn = {9783540688655},
+    publisher = {Springer-Verlag},
+    address = {Berlin, Heidelberg},
+    url = {https://doi.org/10.1007/978-3-540-68880-8_32},
+    doi = {10.1007/978-3-540-68880-8_32},
+    abstract = {Many recommendation systems suggest items to users by utilizing the techniques of  collaborative filtering (CF) based on historical records of items that the users have viewed, purchased, or rated. Two major problems that most CF approaches have to contend with are scalability and sparseness of the user profiles. To tackle these issues, in this paper, we describe a CF algorithm  alternating-least-squares with weighted-   -regularization (ALS-WR), which is implemented on a parallel Matlab platform. We show empirically that the performance of ALS-WR (in terms of  root mean squared error (RMSE)) monotonically improves with both the number of features and the number of ALS iterations. We applied the ALS-WR algorithm on a large-scale CF problem, the Netflix Challenge, with 1000 hidden features and obtained a RMSE score of 0.8985, which is one of the best results based on a pure method. In addition, combining with the parallel version of other known methods, we achieved a performance improvement of 5.91% over Netflix's own CineMatch recommendation system. Our method is simple and scales well to very large datasets.},
+    booktitle = {Proceedings of the 4th International Conference on Algorithmic Aspects in Information and Management},
+    pages = {337–348},
+    numpages = {12},
+    location = {Shanghai, China},
+    series = {AAIM '08}
+}
+
+@inproceedings{2007ProbMF,
+    author = {Salakhutdinov, Ruslan and Mnih, Andriy},
+    title = {Probabilistic Matrix Factorization},
+    year = {2007},
+    isbn = {9781605603520},
+    publisher = {Curran Associates Inc.},
+    address = {Red Hook, NY, USA},
+    abstract = {Many existing approaches to collaborative filtering can neither handle very large datasets nor easily deal with users who have very few ratings. In this paper we present the Probabilistic Matrix Factorization (PMF) model which scales linearly with the number of observations and, more importantly, performs well on the large, sparse, and very imbalanced Netflix dataset. We further extend the PMF model to include an adaptive prior on the model parameters and show how the model capacity can be controlled automatically. Finally, we introduce a constrained version of the PMF model that is based on the assumption that users who have rated similar sets of movies are likely to have similar preferences. The resulting model is able to generalize considerably better for users with very few ratings. When the predictions of multiple PMF models are linearly combined with the predictions of Restricted Boltzmann Machines models, we achieve an error rate of 0.8861, that is nearly 7% better than the score of Netflix's own system.},
+    booktitle = {Proceedings of the 20th International Conference on Neural Information Processing Systems},
+    pages = {1257–1264},
+    numpages = {8},
+    location = {Vancouver, British Columbia, Canada},
+    series = {NIPS'07}
 }
 
 @article{2011ekstrand,
@@ -281,6 +329,31 @@ series = {RecSys '10}
     author = {F.O. Isinkaye and Y.O. Folajimi and B.A. Ojokoh},
     keywords = {Collaborative filtering, Content-based filtering, Hybrid filtering technique, Recommendation systems, Evaluation},
     abstract = {On the Internet, where the number of choices is overwhelming, there is need to filter, prioritize and efficiently deliver relevant information in order to alleviate the problem of information overload, which has created a potential problem to many Internet users. Recommender systems solve this problem by searching through large volume of dynamically generated information to provide users with personalized content and services. This paper explores the different characteristics and potentials of different prediction techniques in recommendation systems in order to serve as a compass for research and practice in the field of recommendation systems.}
+}
+
+
+
+
+
+
+@article{2009MFTechniques,
+    author = {Koren, Yehuda and Bell, Robert and Volinsky, Chris},
+    title = {Matrix Factorization Techniques for Recommender Systems},
+    year = {2009},
+    issue_date = {August 2009},
+    publisher = {IEEE Computer Society Press},
+    address = {Washington, DC, USA},
+    volume = {42},
+    number = {8},
+    issn = {0018-9162},
+    url = {https://doi.org/10.1109/MC.2009.263},
+    doi = {10.1109/MC.2009.263},
+    abstract = {As the Netflix Prize competition has demonstrated, matrix factorization models are superior to classic nearest-neighbor techniques for producing product recommendations, allowing the incorporation of additional information such as implicit feedback, temporal effects, and confidence levels.},
+    journal = {Computer},
+    month = aug,
+    pages = {30–37},
+    numpages = {8},
+    keywords = {Computational intelligence, Netflix Prize, Matrix factorization}
 }
 
 @misc{2017Beyond5stars, 

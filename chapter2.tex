@@ -61,19 +61,22 @@ In this chapter, the theoretical background on RS is presented. A brief history 
 
     Once these three components are set, an algorithm can be designed to meet these requirements. Most of them follows a data structure which is traditionally implemented as follows.
 
+\section{Definitions}
+    For all the following sections, let $\mathcal{U}$ be the set of users with size $|\mathcal{U}|$ and $\mathcal{I}$ be the set of items with size $|\mathcal{I}|$, where each user and item can be represented by their features vectors $\mathbf{u}$ and $\mathbf{i}$, respectively. Consequently, consider that $\mathbf{R}$ denotes an utility matrix where each element $r_{ui}$ represents a feedback between user $u$ and item $i$. 
+
 \section{Structure}
 
     In a personalized recommendation, the relationship between users and items is commonly represented in a utility-matrix $\mathbf{R}$ as shown in Equation \ref{eq:MatrizUtilidade}
     
     \begin{equation}
-        \mathbf{R}_{M \times N} = 
-        \kbordermatrix{ & Item_1 & Item_2 & \ldots & Item_N \\
-        	User_1 & r_{11} & r_{12} & \ldots & r_{1N} \\
-        	User_2 & r_{21} & r_{22} & \ldots & r_{2N}\\      
+        \mathbf{R}_{|\mathcal{U}| \times |\mathcal{I}|} = 
+        \kbordermatrix{ & i_1 & i_2 & \ldots & i_{|\mathcal{I}|} \\
+        	u_1 & r_{11} & r_{12} & \ldots & r_{1|\mathcal{I}|} \\
+        	u_2 & r_{21} & r_{22} & \ldots & r_{2|\mathcal{I}|}\\      
         	\vdots & \vdots & \vdots & \ddots & \vdots\\
-        	User_M & r_{M1} & r_{M2} & \ldots & r_{MN}\\} \qquad
+        	u_{|\mathcal{U}|} & r_{|\mathcal{U}|1} & r_{\mathcal{U}2} & \ldots & r_{|\mathcal{U}||\mathcal{I}|}\\} \qquad
         \label{eq:MatrizUtilidade}      
-    \end{equation} where the element $r_{ij}$ represents the relationship between $User_i$ with $Item_j$, which is usually measured by a feedback system. In this case, two types of feedback can be seen in traditional applications: explicit and implicit feedbacks.
+    \end{equation} where the element $r_{ij}$ is usually measured by a feedback system. In this case, two types of feedback can be seen in traditional applications: explicit and implicit feedbacks.
     
     Explicit feedback are inputs that users intentionally give through an interface, such as rating stars or thumbs-up/thumbs-down buttons. Given that users do not usually rate all items in a catalog (or even the ones that they consumed), this kind of feedback leads to a rather sparse utility matrix, affecting the quality of recommendation \cite{2010Handbook}. 
     
@@ -88,6 +91,7 @@ In this chapter, the theoretical background on RS is presented. A brief history 
 Content-based Filtering (CB) \abbrev{CB}{Content-based Filtering}
 
 \subsection{Collaborative Filtering}
+\label{sec:CF}
 
     Collaborative Filtering (CF) \abbrev{CF}{Collaborative Filtering} is a popular family of techniques which underlies in the assumption 
     that users with similar relevance on past items will probably agree on evaluating future items 
