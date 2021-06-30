@@ -61,7 +61,7 @@ In this chapter, the theoretical background on RS is presented. A brief history 
 
     Once these three components are set, an algorithm can be designed to meet these requirements. Most of them follows a data structure which is traditionally implemented as follows.
 
-\section{Definitions}
+\section{Mathematical Definitions}
     For all the following sections, let $\mathcal{U}$ be the set of users with size $|\mathcal{U}|$ and $\mathcal{I}$ be the set of items with size $|\mathcal{I}|$, where each user and item can be represented by their features vectors $\mathbf{u}$ and $\mathbf{i}$, respectively. Consequently, consider that $\mathbf{R}$ denotes an utility matrix where each element $r_{ui}$ represents a feedback between user $u$ and item $i$. 
 
 \section{Structure}
@@ -145,6 +145,113 @@ Content-based Filtering (CB) \abbrev{CB}{Content-based Filtering}
 
 \section{Evaluation}
 
-Rever artigo "Beyond Matrix Completion" para mais informações
+%Rever artigo "Beyond Matrix Completion" para mais informações
 
-https://sci-hub.se/https://dl.acm.org/doi/10.1145/3383313.3412489
+%https://sci-hub.se/https://dl.acm.org/doi/10.1145/3383313.3412489
+
+Designing a RS requires understanding its different properties and selecting which one best applies to the business' objectives. However, some properties may naturally conflict with one another. For instance, improvements on recommendation accuracy may come at a cost of having lower diversity. 
+
+In order to analyze the trade-offs between a system's properties, one should naturally implement a way to measure them. In that sense, several classes of properties rose in the literature, like prediction accuracy and coverage. Hence, they are formally described in the following sections. 
+
+\subsection{Prediction Accuracy}
+
+At the core of most RS lies a prediction engine and, traditionally, a basic assumption is that a system which provides more accurate predictions will be preferred by users - although a drawback of these assumptions has become a matter of discussion in recent research as discussed in the following chapter. 
+
+Nevertheless, due to the broad usage of prediction accuracy as a way to evaluate recommendation quality, the following classes of measures are defined: rating prediction accuracy, usage prediction accuracy and ranking prediction accuracy.
+
+\subsubsection{Rating Prediction Accuracy}
+
+In applications where explicit feedback is provided, a property to be measure in a RS is its capacity to estimate accurately the user's rating. One of the most popular metrics used for such objective is the Root Mean Squared Error (RMSE) \abbrev{RMSE}{Root Mean Squared Error} defined in Equation \ref{eq:rmse}.
+
+\begin{equation}
+\label{eq:rmse}
+    RMSE = \sqrt{\frac{1}{|\mathcal{U}| \cdot |\mathcal{I}|}\sum_{(u,i) \in \mathcal{K}}(r_{ui} - \hat{r}_{ui})^2}
+\end{equation}
+
+\subsubsection{Usage Prediction Accuracy}
+
+Usage prediction measures are employed on systems that are designed to predict which items consumers are most probably to use rather than predicting their ratings. In this set, after a RS generates a list of $N$ recommendations, four possible outcomes are presented on Table \ref{tab:usage_table}.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{@{}ccc@{}}
+		& \textbf{Recommended}                     & \textbf{Not recommended}                 \\ 
+		\multicolumn{1}{c|}{\textbf{Consumed}}     & \multicolumn{1}{c|}{True-positive (TP)}  & \multicolumn{1}{c|}{False-negative (FN)} \\ 
+		\multicolumn{1}{c|}{\textbf{Not consumed}} & \multicolumn{1}{c|}{False-positive (FP)} & \multicolumn{1}{c|}{True-negative (TN)}  \\ 
+	\end{tabular}
+	\caption{Possible outcomes of usage prediction-oriented recommendations.}
+	\label{tab:usage_table}
+\end{table}
+
+By making the same operation to all users and counting the occurrences on each outcome, classification metrics $precision@K$ and $recall@K$ can be defined as Equations \ref{eq:precision} and \ref{eq:recall}, respectively.
+
+\begin{equation}
+\label{eq:precision}
+Precision@K = \frac{\#TP}{\#TP + \#FP}
+\end{equation}
+
+\begin{equation}
+\label{eq:recall}
+Recall@K = \frac{\#TP}{\#TP + \#FN}
+\end{equation}
+
+\subsubsection{Ranking Prediction Accuracy}
+
+
+\subsection{Coverage}
+
+The previous property of prediction accuracy is tightly related to the amount of data the system has about users and items - ideally, more data yields better accuracy. Therefore, some algorithms may provide high quality recommendations only for a small fraction of users of items. Since this quality is usually used as threshold for item filtering, item or user space coverage are possible evaluations to be analyzed on a RS. 
+
+Item Space Coverage (ISC) \abbrev{ISC}{Item Space Coverage} - also referred to as catalog coverage - is the most commonly used approach and it is defined in its simplest form as in Equation \ref{eq:item_space_coverage}
+
+\begin{equation}
+    \label{eq:item_space_coverage}
+    ISC = \frac{|\cup_{u \in \mathcal{U}} \mathcal{R}_u|}{|\mathcal{I}|}
+\end{equation} which qualitatively is the percentage of items for which a recommendation system can provide predictions \cite{1999AlgorithmicFramework}. However, in some cases users are also kept from receiving recommendations due to various business rules, such as insufficient amount of data or anonymity, leading to the analogous definition of User Space Coverage (USC) \abbrev{USC}{User Space Coverage} \cite{2011EvaluatingRS}.
+
+%falar sobre cold start
+
+
+%\subsection{Confidence}
+
+%\subsection{Trust}
+
+\subsection{Diversity}
+
+%However, much like the novelty property of a RS, high diversity also comes at the expense of good accuracy \cite{2011NoveltyDiversityTopN}.
+
+Displaying a broader array of choices not only helps business bring revenue to long tail market niches, but mainly help users discover new interests - which is often the case that they rely on a RS. Therefore, evaluating diversity can be a good strategy to optimize the chances that at least some item pleases the user.
+
+Formally, one of the most frequently considered metric to evaluate this property is the so-called Intra-List Diversity (ILD) \abbrev{ILD}{Intra-List Diversity} \cite{2001SimilarityDiversity} which is defined as in Equation \ref{eq:diversity}
+
+\begin{equation}
+    \label{eq:diversity}
+    ILD (\mathcal{R}_u) = \frac{1}{|\mathcal{R}_u||\mathcal{R}_u-1|} \sum_{i, j \in \mathcal{R}_u} dist(i,j)
+\end{equation} where $dist(i,j)$ is a configurable distance measure between items. Such distance is generally a function of item features \cite{10.1145/1060745.1060754} or the distance in terms of interaction patterns by users \cite{2014NoveltyDiversityEnhancement}.
+
+
+\subsection{Novelty}
+
+Exposing users to a relevant experience that they would not have found by themselves is a desirable feature in RS, since obvious yet accurate recommendations do not suffice. To assess the level of such exposure, novelty is generally considered, being a piece of information that refers to how different it is with respect to what users have seen in the past \cite{2011RankNoveltyDiversity}. 
+
+Many definitions of novelty have been proposed in the literature, but as a time component is at the core of this property, temporal novelty is usually a common approach that is defined as in Equation \ref{eq:novelty}
+
+\begin{equation}
+\label{eq:novelty}
+    TN(\mathcal{R}^t_u) = \frac{|\mathcal{R}^t_u \setminus \cup_{\tau < t} \mathcal{R}^t_u|}{|\mathcal{R}^t_u|}
+\end{equation} where $\mathcal{R}^t_u$ is the set of recommended items for user $u$ at time $t$. Having such definition may serve as a guideline for improving users' retention as studies show that their perception towards recommendation lists degrades over they if they do not receive novelty over past recommendations. This becomes more latent with users who have fewer interactions, who tend to receive less novel recommendations.
+
+Although being generally understood as the difference between present and past experience, other types of novelty perspectives can be considered. Long tail novelty, for instance, considers how novel are items based on their popularity, which is specially used to evaluate whether RS are biased towards obvious recommendations of very popular items \cite{2014NoveltyDiversityEnhancement}.
+
+\subsection{Serendipity}
+
+Notice that in the definitions of novelty so far, no restriction on item relevance was made. To combine both unexpectedness with a positive response, the notion of serendipity is applied as particularization of novelty. Formally, it can be defined as in Equation 
+
+\begin{equation}
+    \label{eq:serendipity}
+    Srdp(\mathcal{R}_u) = \frac{|(\mathcal{R}_u \setminus PM) \cap Rel_u|}{|\mathcal{R}_u|}
+\end{equation} where $PM$ is a set of items predicted by a primitive method such as already seen items or most popular items and $Rel_u$ is a set of items that the user $u$ finds relevant \cite{2014NoveltyDiversityEnhancement}.
+
+%\subsection{Utility}
+
+
