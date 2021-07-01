@@ -61,10 +61,10 @@ In this chapter, the theoretical background on RS is presented. A brief history 
 
     Once these three components are set, an algorithm can be designed to meet these requirements. Most of them follows a data structure which is traditionally implemented as follows.
 
-\section{Mathematical Definitions}
-    For all the following sections, let $\mathcal{U}$ be the set of users with size $|\mathcal{U}|$ and $\mathcal{I}$ be the set of items with size $|\mathcal{I}|$, where each user and item can be represented by their features vectors $\mathbf{u}$ and $\mathbf{i}$, respectively. Consequently, consider that $\mathbf{R}$ denotes an utility matrix where each element $r_{ui}$ represents a feedback between user $u$ and item $i$. 
-
 \section{Structure}
+    For all the following sections, let $\mathcal{U}$ be the set of users with size $|\mathcal{U}|$ and $\mathcal{I}$ be the set of items with size $|\mathcal{I}|$, where each user and item can be represented by their features vectors $\mathbf{u}$ and $\mathbf{i}$, respectively. Consequently, consider that $\mathbf{R}$ denotes an utility matrix where each element $r_{ui}$ represents a feedback between user $u$ and item $i$. 
+    
+    $b_ui, \mu, b_i, b_u$
 
     In a personalized recommendation, the relationship between users and items is commonly represented in a utility-matrix $\mathbf{R}$ as shown in Equation \ref{eq:MatrizUtilidade}
     
@@ -197,6 +197,28 @@ Recall@K = \frac{\#TP}{\#TP + \#FN}
 
 \subsubsection{Ranking Prediction Accuracy}
 
+Usually applied in the evaluation of search query engines, ranking measures are also employed to acess the quality of a RS when the order of items is essential to system, being the case where users have to browse through tracks or pages of items, for example. In these applications, the aim is to predict not necessarily the explicit feedback but rather the order of the items according to users' preferences. 
+
+A direct way of computing the effectiveness of ranking is through the Mean Reciprocal Rank (MRR) \abbrev{MRR}{Mean Reciprocal Rank} as defined in Equation \ref{eq:mrr}
+
+\begin{equation}
+\label{eq:mrr}
+MRR = \frac{1}{|\mathcal{R}|}\sum_{i \in \mathcal{R}} \frac{1}{rank_i}
+\end{equation} where $rank_i \geq 1$ is an integer indicating the rank of a consumed item $i$. 
+
+Notice that the MRR only takes into account the rank of an item, disregarding its relevance to the user. With the intent to penalize not only wrongly-ordered item but also unsuited ones, the Discounted Cumulative Gain (DCG) \abbrev{DCG}{Discounted Cumulative Gain} \cite{10.1145/582415.582418} represents a weighted sum of relevance's degrees for each ranked items. Its most common definition is shown in Equation \ref{eq:dcg}
+
+\begin{equation}
+    \label{eq:dcg}
+    DCG = \sum_{i \in \mathcal{R}} \frac{1}{\log_2(rank_i+1)} \cdot g(r_{ui})
+\end{equation} where $g(r_{ui})$ is a gain function of the relevance - which is traditionally the identity function, although alternative forms are also employed. For example, placing stronger emphasis on more relevant items can be achieved by defining $g(r_{ui}) = 2^{r_{ui}}-1$. Notice that the logarithmic part of the equation can also be changed to define other discounting approaches towards the rank, which can be found more formally in \cite{NDCGref}.
+
+An ideal ordered list can be created by sorting all relevant items by their relative relevance, producing the maximum value for DCG - yielding the \textit{Ideal} DCG ($IDCG$) \abbrev{IDCG}{Ideal Discounted Cumulative Gain}. This allows to normalize the obtained DCG and create the so-called Normalized Discounted Cumulative Gain (NDCG) \abbrev{NDCG}{Normalized Discounted Cumulative Gain}, as defined by Equation \ref{eq:NDCG}.
+
+\begin{equation}
+	\label{eq:NDCG}
+	NDCG = \frac{DCG}{IDCG}
+\end{equation}
 
 \subsection{Coverage}
 
@@ -234,7 +256,7 @@ Formally, one of the most frequently considered metric to evaluate this property
 
 Exposing users to a relevant experience that they would not have found by themselves is a desirable feature in RS, since obvious yet accurate recommendations do not suffice. To assess the level of such exposure, novelty is generally considered, being a piece of information that refers to how different it is with respect to what users have seen in the past \cite{2011RankNoveltyDiversity}. 
 
-Many definitions of novelty have been proposed in the literature, but as a time component is at the core of this property, temporal novelty is usually a common approach that is defined as in Equation \ref{eq:novelty}
+Many definitions of novelty have been proposed in the literature, but as a time component is at the core of this property, Temporal Novelty (TN) \abbrev{TR}{Temporal Novelty} is usually a common approach that is defined as in Equation \ref{eq:novelty}
 
 \begin{equation}
 \label{eq:novelty}

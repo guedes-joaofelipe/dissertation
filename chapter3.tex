@@ -1,10 +1,10 @@
-
+This chapter focuses on describing the main technicalities of machine learning algorithms that are commonly used in RS and shall be tested in this research. Sparsity concepts are also presented in order to establish key definitions that support the proposed framework to evaluate sparsity effects on recommendation quality.
 
 \section{Neighborhood Models}
 
-As aforementioned in Section \ref{sec:CF}, neighborhood-based models use the principle of \textit{word-of-mouth} where the feedbacks of like-minded users are used to compute item preferences on a cluster of peers. Since similarity between two entities are at the core of these models, two main approaches are proposed: the item-based and the user-based clustering.
+As aforementioned in Section \ref{sec:CF}, neighborhood-based models use the principle of \textit{word-of-mouth} where the feedbacks of like-minded users are employed to compute item preferences on a cluster of peers. Since similarity between two entities are at the core of these models, two main approaches are described: the item- and user-based clustering.
 
-The user-based approach was applied in the early CF techniques by \cite{1999AlgorithmicFramework}, where users similarities were computed to estimate feedback prediction. However, not only does user-user similarity matrices usually have high dimensionality, but also do not provide helpful explanations on the recommendations. In the view of overcoming these drawback, in \cite{2001sarwar} the authors propose to use an item-item similarity matrix instead, since the fact that usually $|\mathcal{U}| < |\mathcal{I}|$ results in a lower dimension similarity matrix. With that in perspective, the item-based clustering method is formally described as follows.
+User-based approach was applied in the early CF techniques, where users similarities were computed to estimate feedback prediction \cite{1999AlgorithmicFramework}. However, not only does user-user similarity matrices frequently present high dimensionality, but also does not provide helpful explanations on recommendations. To overcome these drawbacks, item-item similarity matrix is used instead, since the fact that usually $|\mathcal{U}| < |\mathcal{I}|$ results in a lower dimension similarity matrix \cite{2001sarwar}. With this perspective, the item-based clustering method is formally described as follows.
 
 Given the set $\mathcal{N}_i(u)$ of $k$ most similar users to $u$ who have interacted with item $i$, $r_{ui}$ can be estimated according to Equation \ref{eq:itemknn}
 
@@ -44,6 +44,8 @@ Given the set $\mathcal{N}_i(u)$ of $k$ most similar users to $u$ who have inter
             \mathbf{p}_u \leftarrow \mathbf{p}_u + \alpha (e_{ui}\cdot \mathbf{q}_i-\lambda \cdot \mathbf{p}_u)
             \end{cases}
     \end{equation} Although being simpler to implement, this approach is not suitable for parallelization since the learning algorithm needs to loop over all training set several times. This is a major drawback since most RS data sets have massive amount of data. In order to use the computational advantages of distributed systems, the Alternating Least Squares (ALS) \abbrev{ALS}{Alternating Least Squares} approach has been proposed by considering the minimization problem as follows.
+
+    %PCA / SCA / ICA
     
     Due to the fact that both $\mathbf{q}_i$ and $\mathbf{p}_u$ are variables, Equation \ref{eq:mf_min} is not convex, leading to possible local minimum. On the other hand, if one of these variables are fixed, then the problem becomes quadratic and thus can be solved optimally. Consequently, the ALS switches between considering one variable fixed and solving the problem to the other, and then doing the opposite in a second step. The training steps can be summarized as follows \cite{2008ALSWR}:
     
