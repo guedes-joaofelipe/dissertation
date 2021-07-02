@@ -88,33 +88,26 @@ In this chapter, the theoretical background on RS is presented. A brief history 
 
 \subsection{Content-Based Filtering}
 
-Content-based Filtering (CB) \abbrev{CB}{Content-based Filtering}
+    Content-based Filtering (CB) \abbrev{CB}{Content-based Filtering} is a family of methods that, at their core, seeks to match users and items by their features. The focus is on creating users' consumption profiles by creating a latent vector which represents the types of items they are leaned to consume \cite{2016Textbook}.
+    
+    In this set, only the target-user's interactions with the system are necessary, disregarding other users' behaviours. The positive impact of such architecture is that less information about the user is needed to infer his preferences. For instance, if a child searches for a movie to watch on a streaming platform, kids-oriented items can be suggested based on his demographic feature. It has also been proven that this is an effective way to reduce the \textit{item cold-start}, since the item's feature might be sufficient for it to start being recommended \cite{10.1145/564376.564421}. Also, by using the features of items to build a recommendation list, it provides transparency and explanations on why that item is being suggested, which has also been proven to be a contributing factor to build users' trust in the system \cite{10.1145/1111449.1111475}.
+
+    On the opposite direction, a major drawback of such topology is that CB tends to recommend the same types of items - commonly known as the filter bubble - and thus it suffers from overspecialization, which has been tackled by increasing serendipity in the RS \cite{10.1109/HIS.2008.25}. Furthermore, some applications may not easily provide items' or users' features and therefore poor representations are extracted. Examples of such limitations occur on video, audio or image recommendation, such as the one used at the \textit{Music Genome Project} \cite{2009MFTechniques} employed by the online radio service \textit{Pandora.com}.
 
 \subsection{Collaborative Filtering}
 \label{sec:CF}
 
-    Collaborative Filtering (CF) \abbrev{CF}{Collaborative Filtering} is a popular family of techniques which underlies in the assumption 
-    that users with similar relevance on past items will probably agree on evaluating future items 
-    the same way [REF, melhorar]. In that sense, users' relevance to items can be estimated by their
-    peers' feedback.
+    Collaborative Filtering (CF) \abbrev{CF}{Collaborative Filtering} is another popular family of techniques which underlies in the assumption     that users with similar relevance on past items will probably agree on evaluating future items the same way [REF, melhorar]. In that sense, users' relevance to items can be estimated by their peers' feedback.
 
-    Given these characteristics of CF, two groups of methods are usually portrayed in the literature: 
-    the memory-based CF and the model-based CF [REF, Survey on Recommendation Systems 2016 Gaudani]. 
+    Given these characteristics of CF, two groups of methods are usually portrayed in the literature: the memory-based CF and the model-based CF [REF, Survey on Recommendation Systems 2016 Gaudani]. 
 
   \subsubsection{Memory-based CF}
 
-    In the memory-based method, the utility matrix is used to calculate the similarity between 
-    users or items based on past ratings or interactions. In that sense, two approaches can be made:
-    the \textit{user-user} CF and the \textit{item-item} CF \cite{2011ekstrand}. 
+    In the memory-based method, the utility matrix is used to calculate the similarity between users or items based on past ratings or interactions. In that sense, two approaches can be made: the \textit{user-user} CF and the \textit{item-item} CF \cite{2011ekstrand}. 
     
-    The user-user CF, also known as \textit{k-nearest neighbors} CF tries to find users' peers 
-    whose past evaluation behaviour is similar to the target user. By finding these peers, their 
-    feedback for an item in question is weighted by their level of agreement with the target user.  
+    The user-user CF, also known as \textit{k-nearest neighbors} CF tries to find users' peers whose past evaluation behaviour is similar to the target user. By finding these peers, their feedback for an item in question is weighted by their level of agreement with the target user.  
     
-    A critical design decision in implementing this approach is the choice o similarity functions. 
-    Several functions have been proposed in the literature, such as the Pearson correlation, the 
-    Spearman rank correlation or the Cosine similarity. An overview of these functions applied to RS
-    can be found in \cite{2011ekstrand}.
+    A critical design decision in implementing this approach is the choice o similarity functions. Several functions have been proposed in the literature, such as the Pearson correlation, the Spearman rank correlation or the Cosine similarity. An overview of these functions applied to RS can be found in \cite{2011ekstrand}.
     
     While effective, user-user CF suffers from scalability problems when the user-item ratio grows, which typically happens in e-commerce environments (thus requiring operations on larger similarity matrices). To overcome this issue, \textit{item-item} CF uses similarities between the evaluation patterns of items. In its overall structure, it is similar to content-based recommendation, but instead of relying primarily on item's metadata, it deduces items' similarities from user preference patterns \cite{2001sarwar}.
 
