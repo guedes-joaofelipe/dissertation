@@ -11,7 +11,9 @@ Given the set $\mathcal{N}_i(u)$ of $k$ most similar users to $u$ who have inter
 \begin{equation} 
     \label{eq:itemknn}
     \hat{r}_{ui} = b_{ui} + \frac{\sum_{v \in \mathcal{N}_i(u)} \rho(u,v)\cdot (r_{vi}-b_{vi})}{\sum_{v \in \mathcal{N}_i(u)} \rho(u,v)}
-\end{equation} where $\rho(u,v)$ is a similarity measure between users $u$ and $v$. Several similarity measures have been used in this scenario, such as the Pearson correlation coefficient or the cosine similarity \cite{2010Handbook}.
+\end{equation} where $\rho(u,v)$ is a distance or similarity measure between users $u$ and $v$. Several  measures have been used in this scenario, such as the Pearson correlation coefficient, the cosine similarity or the euclidean distance \cite{2010Handbook, 10.1145/3133264.3133299}.
+
+%% Trocar similarity por distancia e usar outras distancias - Euclidean, Minkiwski, Mahalanobis, Cosine
 
 \section{Latent Factor Models}
 
@@ -31,7 +33,7 @@ Given the set $\mathcal{N}_i(u)$ of $k$ most similar users to $u$ who have inter
     
     \begin{equation}
         \label{eq:mf_min}
-        \min_{\mathbf{q}^*, \mathbf{p}^*} \sum_{(u,i) \in \mathcal{K}} (r_{ui} - \mathbf{q}^T_i \cdot \mathbf{p}_u)^2 + \lambda (||\mathbf{q}_i||^2 + ||\mathbf{p}_u||)^2
+        \min_{\mathbf{q}^*, \mathbf{p}^*} \sum_{(u,i) \in \mathcal{K}} \bigg(r_{ui} - \mathbf{q}^T_i \cdot \mathbf{p}_u\bigg)^2 + \lambda \bigg(\sum_{i \in \mathcal{I}^+}||\mathbf{q}_i||^2 + \sum_{u \in \mathcal{U}^+}||\mathbf{p}_u||^2 \bigg)^2
     \end{equation} where $\lambda$ is a regularization parameter that can be estimated through cross-validation (probabilistic estimation is also proposed in \cite{2007ProbMF}). Two approaches are widely used to solve this optimization problem: the stochastic gradient descent and the alternating least squares. 
     
     By using Stochastic Gradient Descent (SGD) \abbrev{SGD}{Stochastic Gradient Descent} [Ref Simon Funk], the algorithm loops through all user-item pairs in a training set and computes an associated prediction error $e_{ui} \triangleq r_{ui} - \mathbf{q}^T_i \cdot \mathbf{p}_u$, updating the parameters by a magnitude proportional to a learning rate $\alpha$ as shown in Equation \ref{eq:sgd}.

@@ -64,7 +64,7 @@ In this chapter, the theoretical background on RS is presented. A brief history 
 \section{Structure}
     For all the following sections, let $\mathcal{U}$ be the set of users with size $|\mathcal{U}|$ and $\mathcal{I}$ be the set of items with size $|\mathcal{I}|$, where each user and item can be represented by their features vectors $\mathbf{u}$ and $\mathbf{i}$, respectively. Consequently, consider that $\mathbf{R}$ denotes an utility matrix where each element $r_{ui}$ represents a feedback between user $u$ and item $i$. 
     
-    $b_ui, \mu, b_i, b_u$
+    $b_ui, \mu, b_i, b_u, \mathcal{I}_u, \mathcal{U}_i, \mathcal{U}^+, \mathcal{I}^+$
 
     In a personalized recommendation, the relationship between users and items is commonly represented in a utility-matrix $\mathbf{R}$ as shown in Equation \ref{eq:MatrizUtilidade}
     
@@ -76,7 +76,7 @@ In this chapter, the theoretical background on RS is presented. A brief history 
         	\vdots & \vdots & \vdots & \ddots & \vdots\\
         	u_{|\mathcal{U}|} & r_{|\mathcal{U}|1} & r_{\mathcal{U}2} & \ldots & r_{|\mathcal{U}||\mathcal{I}|}\\} \qquad
         \label{eq:MatrizUtilidade}      
-    \end{equation} where the element $r_{ij}$ is usually measured by a feedback system. In this case, two types of feedback can be seen in traditional applications: explicit and implicit feedbacks.
+    \end{equation} where the element $r_{ui}$ is usually measured by a feedback system, traditionally being one of the two types: explicit and implicit feedback.
     
     Explicit feedback are inputs that users intentionally give through an interface, such as rating stars or thumbs-up/thumbs-down buttons. Given that users do not usually rate all items in a catalog (or even the ones that they consumed), this kind of feedback leads to a rather sparse utility matrix, affecting the quality of recommendation \cite{2010Handbook}. 
     
@@ -88,38 +88,34 @@ In this chapter, the theoretical background on RS is presented. A brief history 
 
 \subsection{Content-Based Filtering}
 
-    Content-based Filtering (CB) \abbrev{CB}{Content-based Filtering} is a family of methods that, at their core, seeks to match users and items by their features. The focus is on creating users' consumption profiles by creating a latent vector which represents the types of items they are leaned to consume \cite{2016Textbook}.
+    Content-based Filtering (CB) \abbrev{CB}{Content-based Filtering} is a family of methods that, at their core, seeks to match users and items by their features. The focus is to use these features to raise users' consumption profiles, creating vector representations of the types of items they are leaned to consume, and computing items similar to that consumption vector \cite{2016Textbook}.
     
     In this set, only the target-user's interactions with the system are necessary, disregarding other users' behaviours. The positive impact of such architecture is that less information about the user is needed to infer his preferences. For instance, if a child searches for a movie to watch on a streaming platform, kids-oriented items can be suggested based on his demographic feature. It has also been proven that this is an effective way to reduce the \textit{item cold-start}, since the item's feature might be sufficient for it to start being recommended \cite{10.1145/564376.564421}. Also, by using the features of items to build a recommendation list, it provides transparency and explanations on why that item is being suggested, which has also been proven to be a contributing factor to build users' trust in the system \cite{10.1145/1111449.1111475}.
 
-    On the opposite direction, a major drawback of such topology is that CB tends to recommend the same types of items - commonly known as the filter bubble - and thus it suffers from overspecialization, which has been tackled by increasing serendipity in the RS \cite{10.1109/HIS.2008.25}. Furthermore, some applications may not easily provide items' or users' features and therefore poor representations are extracted. Examples of such limitations occur on video, audio or image recommendation, such as the one used at the \textit{Music Genome Project} \cite{2009MFTechniques} employed by the online radio service \textit{Pandora.com}.
+    On the opposite direction, a major drawback of such topology is that CB tends to recommend the same types of items - commonly known as the \textit{bubble effect} - and thus it suffers from overspecialization, which has been tackled by increasing serendipity in the RS \cite{10.1109/HIS.2008.25}. Furthermore, some applications may not easily provide items' or users' features and therefore poor representations are extracted. Examples of such limitations occur on video, audio or image recommendation, such as the one used at the \textit{Music Genome Project} \cite{2009MFTechniques} employed by the online radio service \textit{Pandora.com}.
 
 \subsection{Collaborative Filtering}
 \label{sec:CF}
 
     Collaborative Filtering (CF) \abbrev{CF}{Collaborative Filtering} is another popular family of techniques which underlies in the assumption     that users with similar relevance on past items will probably agree on evaluating future items the same way [REF, melhorar]. In that sense, users' relevance to items can be estimated by their peers' feedback.
 
-    Given these characteristics of CF, two groups of methods are usually portrayed in the literature: the memory-based CF and the model-based CF [REF, Survey on Recommendation Systems 2016 Gaudani]. 
+    Given these characteristics of CF, two groups of methods are usually portrayed in the literature: the memory-based CF and the model-based CF \cite{2010Handbook}. 
 
-  \subsubsection{Memory-based CF}
+  \subsubsection{Memory-based method}
 
-    In the memory-based method, the utility matrix is used to calculate the similarity between users or items based on past ratings or interactions. In that sense, two approaches can be made: the \textit{user-user} CF and the \textit{item-item} CF \cite{2011ekstrand}. 
+    The memory-based method creates recommendations based on the feedback of points in a cluster - which is why it is also called the neighborhood method. Two approaches guide the creation of such groups: the user- and the item-based CF.
     
-    The user-user CF, also known as \textit{k-nearest neighbors} CF tries to find users' peers whose past evaluation behaviour is similar to the target user. By finding these peers, their feedback for an item in question is weighted by their level of agreement with the target user.  
+    %uses the utility matrix to calculate the similarity between users or items and create clusters that are used to estimate preferences. based on past feedback. In that sense, two approaches can be made: the user-based CF and the item-based CF \cite{2016Textbook, 2011ekstrand}. 
     
-    A critical design decision in implementing this approach is the choice o similarity functions. Several functions have been proposed in the literature, such as the Pearson correlation, the Spearman rank correlation or the Cosine similarity. An overview of these functions applied to RS can be found in \cite{2011ekstrand}.
+    Being firstly proposed in the \textit{GroupLens} Usnet article recommender, the user-based CF tries to find peers of users with similar past consumption behaviour \cite{10.1145/192844.192905}. By finding a target-user's peers, their feedback for an item is weighted by their level of similarity with the target-user.
     
-    While effective, user-user CF suffers from scalability problems when the user-item ratio grows, which typically happens in e-commerce environments (thus requiring operations on larger similarity matrices). To overcome this issue, \textit{item-item} CF uses similarities between the evaluation patterns of items. In its overall structure, it is similar to content-based recommendation, but instead of relying primarily on item's metadata, it deduces items' similarities from user preference patterns \cite{2001sarwar}.
+    Despite effective, user-based CF suffers from scalability issues when the user-item ratio grows, which typically happens in e-commerce environments where operations on large similarity matrices are required \cite{10.1016/j.ins.2007.07.024, 10.5555/2842045.2842365, 10.1016/j.knosys.2015.03.001}. To overcome this issue, item-based CF uses similarities between the evaluation patterns of items, yielding a lower dimensional and more stable similarity matrix than its user-based counterpart \cite{2003amazon, 10.1155/2009/421425}. In its overall structure, it is similar to content-based recommendation, but instead of relying primarily on item's metadata, it deduces items' similarities from user preference patterns \cite{2001sarwar}.
 
-    Several advantages can be listed for the memory-based CF. Given that mostly rely on similarity     functions, their algorithms can be easily implemented. Furthermore, memory-based CF are online     learning models, which provides great advantages to the arrival of new data and, therefore, to the adaptation of concept drifts to users' preferences [REF]. Finally, explanations about the     recommendations can be provided to users, which has shown to increase users' trust in the system     [REF, ZHENG 2016].
+    A critical design decision in implementing this approach is the choice of similarity functions to compute the neighborhood. Traditional functions are the Pearson correlation coefficient and the cosine similarity measure. However, these traditional functions have drawbacks such as providing poor similarity representations when a small number of co-rated items are considered, which frequently happen in sparse matrices \cite{2016Textbook}. Enhancements proposals for these functions have been made in past research and an overview of them can be found in \cite{10.1145/3133264.3133299}.
 
-    However, data sparsity poses a great disadvantage to these methods. Since the utility matrix is 
-    sparse in most applications, the efficiency in similarity calculations is compromised by the lack 
-    of sufficient data [REF, AGARRWAL, Recommender SYstems: The textbook 2016]
-    
-    An example of item-item CF was shown in \cite{2003amazon}, where authors use a recommendation 
-    algorithm to personalize the online store for each customer at \textit{Amazon.com}, demonstrating 
-    the scalability advantage of this approach.
+    On the other hand, several advantages can be listed for the memory-based CF. Besides the ease of implementation of similarity functions, memory-based CF are online learning models, providing great advantages to the arrival of new data and, therefore, to the adaptation of concept drifts to users' preferences. Finally, like the CB topology, explanations about recommendations can be provided to users, which has shown to increase users' trust in the system as aforementioned.
+
+    An example of item-based CF was shown in \cite{2003amazon}, where authors use a recommendation algorithm to personalize the online store for each customer at \textit{Amazon.com}, demonstrating the scalability advantage of this approach \cite{2003amazon}.
 
   \subsubsection{Model-based CF}
 
