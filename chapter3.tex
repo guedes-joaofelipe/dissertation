@@ -65,4 +65,57 @@ Given the set $\mathcal{N}_i(u)$ of $k$ most similar users to $u$ who have inter
         \min_{\mathbf{q}^*, \mathbf{p}^*} \sum_{(u,i) \in \mathcal{K}} (r_{ui} - \mathbf{q}^T_i \cdot \mathbf{p}_u)^2 + \lambda \Big(\sum_i n(i)||\mathbf{q}_i||^2 + \sum_u n(u)||\mathbf{p}_u||\Big)^2
     \end{equation} where $n(u)$ and $n(i)$ are the total number of interactions of user $u$ and item $i$, respectively.
 
-\subsection{Autoencoders}
+\subsection{Auto-encoders}
+
+
+\section{Sparsity}
+
+    Since sparsity is at the core of this research, its proper definition needs to be layed out. However, several sparsity concepts and measures have been proposed in the literature. This research focuses on the concept presented by Hurley et al. \cite{10.1109/TIT.2009.2027527}, which is defined as: 
+    
+    \begin{quote}
+        \textit{A sparse representation is one in which a small number of coefficients contain a large proportion of the energy}.    
+    \end{quote}
+     
+    Mathematically, a sparsity measure $S$ is a function with the mapping in Equation \ref{eq:sparsity}
+     
+    \begin{equation}
+        \label{eq:sparsity}
+        S: \bigg( \cup_{n \geq 1} \mathbb{C}^n \bigg) \rightarrow \mathbb{R}
+    \end{equation} where $n \in \mathbb{N}$ is the number of coefficients. Although many functions preserve this mapping, it needs to follow several criteria to be considered a sparsity measure. The one that preserves most of these criteria and provides a way to measure the sparsity of a distribution is the Gini Index \cite{10.2307/2223525}, being originally proposed in economics to measure the inequality of wealth but was later demonstrated to be used as a sparsity measure \cite{2006SparseSources, 2004GiniIndexSpeech}. It is defined as in Equation \ref{eq:gini_index}
+     
+    \begin{equation}
+        \label{eq:gini_index}
+        S(\textbf{v}) = 1 - 2\sum_{k=1}^{|\textbf{v}|} \frac{v_k}{||\textbf{v}||_1} \bigg( \frac{|\textbf{v}|-k+0.5}{|\textbf{v}|} \bigg)
+    \end{equation} where $\textbf{v}$ is a vector with its $v_k$ coefficients sorted by magnitude from smallest to largest \cite{10.1109/TIT.2009.2027527}.
+     
+    In the context of RS, two types of sparsity measures can be explored: overall and specific sparsity measures \cite{10.1016/j.eswa.2010.09.141}.
+    
+    \subsubsection{Overall Sparsity} 
+
+		The Overall Sparsity (OS) \abbrev{OS}{Overall Sparsity} measure of a $\mathbb{R}_{|\mathcal{U}| \times |\mathcal{I}|}$ utility matrix is defined as in Equation \ref{eq:os}
+	
+		\begin{equation}
+			\label{eq:os}
+			OS = 1 - \frac{|\mathcal{I}^+|}{|\mathcal{U}| \cdot |\mathcal{I}|}	 
+		\end{equation} where $|\mathcal{I}^+|$ denotes the number of non-zero elements. 
+
+	\subsubsection{User Specific Sparsity}
+	
+	In order to measure how sparse a given user $u$ is compared to all other users, the User Specific Sparsity (USS) \abbrev{USS}{User Specific Sparsity} measure for that single user is expressed as in Equation  \ref{eq:uss}
+
+	\begin{equation}
+		\label{eq:uss}
+		USS = 1 - \frac{|\mathcal{I}_u|}{max_{u \in \mathcal{U}} (|\mathcal{I}_u|)}
+	\end{equation} where $n_u$ is the number of evaluations input by user $u$. 
+	
+	\subsubsection{Item Specific Sparsity}
+	
+	Similarly, the Item Specific Sparsity (ISS) \abbrev{ISS}{Item Specific Sparsity} measure for each item $i$ is expressed in Equation \ref{eq:iss}
+	
+	\begin{equation}
+	    \label{eq:iss}
+	    ISS = 1 - \frac{|\mathcal{U}_i|}{max_{i \in \mathcal{I}} (|\mathcal{U}_i|)}
+	\end{equation} where $n_i$ is the number of evaluations input to item $i$.
+	
+	Note that both USS and ISS are relative measures, in the sense that they compare how sparse a user and an item is to all other users and items, respectively.
+	
