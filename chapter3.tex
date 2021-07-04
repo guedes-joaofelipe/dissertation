@@ -81,12 +81,16 @@ Given the set $\mathcal{N}_i(u)$ of $k$ most similar users to $u$ who have inter
     \begin{equation}
         \label{eq:sparsity}
         S: \bigg( \cup_{n \geq 1} \mathbb{C}^n \bigg) \rightarrow \mathbb{R}
-    \end{equation} where $n \in \mathbb{N}$ is the number of coefficients. Although many functions preserve this mapping, it needs to follow several criteria to be considered a sparsity measure. The one that preserves most of these criteria and provides a way to measure the sparsity of a distribution is the Gini Index \cite{10.2307/2223525}, being originally proposed in economics to measure the inequality of wealth but was later demonstrated to be used as a sparsity measure \cite{2006SparseSources, 2004GiniIndexSpeech}. It is defined as in Equation \ref{eq:gini_index}
+    \end{equation} where $n \in \mathbb{N}$ is the number of coefficients. Although many functions preserve this mapping, it needs to follow several criteria to be considered a sparsity measure. The one that preserves most of these criteria and provides a way to measure the sparsity of a distribution is the Gini Index (GI) \abbrev{GI}{Gini Index} \cite{10.2307/2223525}, being originally proposed in economics to measure the inequality of wealth but was later demonstrated to be used as a sparsity measure \cite{2006SparseSources, 2004GiniIndexSpeech}. For a discrete signal, the GI is defined as follows.
+    
+    Given a vector $\textbf{v} = [v_1, v_2, \ldots, v_N]$ with its elements re-ordered and represented by $v_k$ where $|v_1| \leq |v_2| \ldots \leq |v_N|$, then the GI is defined as in Equation \ref{eq:gini_index}.
      
     \begin{equation}
         \label{eq:gini_index}
-        S(\textbf{v}) = 1 - 2\sum_{k=1}^{|\textbf{v}|} \frac{v_k}{||\textbf{v}||_1} \bigg( \frac{|\textbf{v}|-k+0.5}{|\textbf{v}|} \bigg)
-    \end{equation} where $\textbf{v}$ is a vector with its $v_k$ coefficients sorted by magnitude from smallest to largest \cite{10.1109/TIT.2009.2027527}.
+        GI(\textbf{v}) = 1 - 2\sum_{k=1}^{N} \frac{|v_k|}{||\textbf{v}||_1} \bigg( \frac{N-k+1/2}{N} \bigg)
+    \end{equation}
+     
+    Besides being normalized for any vector, $GI(\textbf{v}) = 0$ represents the least sparse signal where all coefficients have an uniform amount of energy and $GI(\textbf{v}) = 1$ represents the most sparse signal with all the energy concentrated on a single coefficient \cite{10.1109/TIT.2009.2027527}. 
      
     In the context of RS, two types of sparsity measures can be explored: overall and specific sparsity measures \cite{10.1016/j.eswa.2010.09.141}.
     
