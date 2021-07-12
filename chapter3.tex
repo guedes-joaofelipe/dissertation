@@ -15,21 +15,41 @@ Given the set $\mathcal{N}_i(u)$ of $k$ most similar users to $u$ who have inter
 
 %% Trocar similarity por distancia e usar outras distancias - Euclidean, Minkiwski, Mahalanobis, Cosine
 
+
+
 \section{Latent Factor Models}
 
+In latent factor approaches, it is assumed that data can be described by an underlying model . Formally, they can be abstracted as in Equation \ref{eq:latent_factor_models}
+
+\begin{equation}
+    \label{eq:latent_factor_models}
+    \hat{r}_{ui} = f(u,i|\Theta)
+\end{equation} where $f$ is an \textit{interaction function} that maps model parameters to the predicted feedback $\hat{r}_{ui}$ and $\Theta$ denotes model parameters to be estimated by a learning algorithm \cite{10.1145/3038912.3052569}.
+
+%Besides the model definition for learning $\Theta$, different approaches of objective function have been proposed in past literature, most of them fitting in one of two categories: point-wise and pair-wise objective functions [REF CF AUTOENCODERS].
+
+Several approaches have been suggested to represent users and items embeddings and how they are combined to generate feedback predictions, the most commonly ones being presented as follows.  
+
+\subsection{Multi-Layer Perceptron}
+
+Neural Collaborative Filtering
 
 \subsection{Matrix Factorization}
 
-    Matrix factorization (MF) \abbrev{MF}{Matrix Factorization} models map users and items to a joint latent factor space of dimensionality $f$ such that user-item interactions are modeled as inner products in that space. Formally, the utility matrix $\mathbf{R}$ can be modeled as Equation \ref{eq:MF}
+    Matrix factorization (MF) \abbrev{MF}{Matrix Factorization} models map users and items to a joint latent factor space of dimensionality $f$ such that user-item interactions are modeled as inner products in that space. Formally, the feedback $r_{ui}$ in this case is estimated as in Equation \ref{eq:MF}
     
     \begin{equation}
         \label{eq:MF}
-        \mathbf{R_{|\mathcal{U}| \times |\mathcal{I}|}} = \mathbf{Q}_{|\mathcal{I}| \times f} \mathbf{P}_{f \times |\mathcal{U}|} 
-    \end{equation} where each item $i$ and user $u$ are mapped as vectors $\mathbf{q}_i \in \mathbb{R}^f$ and $\mathbf{p}_u \in \mathbb{R}^f$, respectively, and their interaction is given by $r_{ui} = \mathbf{q}^T_i \cdot \mathbf{p}_u$ \cite{2009MFTechniques}.
+        \hat{r}_{ui} = f(u,i|\mathbf{p}_u, \mathbf{q}_i) = \mathbf{p}_u^T \mathbf{q}_i = \sum_{k=1}^f p_{uk}q_{ik}
+    \end{equation} where each item $i$ and user $u$ are mapped as vectors (latent factors) $\mathbf{q}_i, \mathbf{p}_u \in \mathbb{R}^f$ and $f$ is a hyper-parameter to be chosen \cite{10.1145/3038912.3052569,2009MFTechniques}.
     
-    The goal of the learning algorithm is to estimate the parameters of  $\mathbf{q}_i$ and $\mathbf{p}_u$. However, since most of the user-item interactions in $\mathbf{R}$ are unknown, the algorithm can only take into account the error associated with known entries of the matrix. Furthermore, in this set there are $(|\mathcal{U}|+|\mathcal{I}|)\cdot f$ parameters to be found using at most $|\mathcal{U}|\cdot |\mathcal{I}|$ interactions, which is hardly the usual scenario since users most often interact with a small number of items. As a consequence, the learning algorithm needs to find a great number of parameters using few training samples, making over-fitting a problem to be dealt with \cite{2008ALSWR}.
+    The goal of the learning algorithm is to estimate the parameters of $\mathbf{p}_u$ and $\mathbf{q}_i$. However, since most of the user-item interactions in $\mathbf{R}$ are unknown, the algorithm can only take into account the error associated with known entries of the matrix. Furthermore, in this set there are at least $(|\mathcal{U}|+|\mathcal{I}|)\cdot f$ parameters to be learned using at most $|\mathcal{U}|\cdot |\mathcal{I}|$ interactions, which is hardly the usual scenario since users most often interact with a small number of items. As a consequence, the learning algorithm needs to find a considerable number of parameters using few training samples, making over-fitting a problem to be dealt with \cite{2008ALSWR}.
     
-    Mathematically, let $\mathcal{K}$ be the set of $(u,i)$ pairs for which $r_{ui}$ is known. Then, the learning algorithm is designed to solve the following optimization problem: 
+   Several model definitions for learning $\Theta$ $\mathbf{p}_u$ and $\mathbf{q}_i$ have been proposed in past literature, each containing their own objective function. Hence, the most commonly used are defined as follows.
+   
+   \subsubsection{Alternating Least Squares}
+    
+    Let $\mathcal{K}$ be the set of $(u,i)$ pairs for which $r_{ui}$ is known. Then, the learning algorithm is designed to solve the following optimization problem: 
     
     \begin{equation}
         \label{eq:mf_min}
@@ -65,7 +85,9 @@ Given the set $\mathcal{N}_i(u)$ of $k$ most similar users to $u$ who have inter
         \min_{\mathbf{q}^*, \mathbf{p}^*} \sum_{(u,i) \in \mathcal{K}} (r_{ui} - \mathbf{q}^T_i \cdot \mathbf{p}_u)^2 + \lambda \Big(\sum_i n(i)||\mathbf{q}_i||^2 + \sum_u n(u)||\mathbf{p}_u||\Big)^2
     \end{equation} where $n(u)$ and $n(i)$ are the total number of interactions of user $u$ and item $i$, respectively.
 
-\subsection{Auto-encoders}
+\subsubsection{Autoencoders}
+
+
 
 
 \section{Sparsity}
