@@ -19,20 +19,31 @@ Given the set $\mathcal{N}_i(u)$ of $k$ most similar users to $u$ who have inter
 
 \section{Latent Factor Models}
 
-In latent factor approaches, it is assumed that data can be described by an underlying model . Formally, they can be abstracted as in Equation \ref{eq:latent_factor_models}
+In latent factor approaches, it is assumed that data can be described by an underlying model. Formally, they can be abstracted as in Equation \ref{eq:latent_factor_models}
 
 \begin{equation}
     \label{eq:latent_factor_models}
-    \hat{r}_{ui} = f(u,i|\Theta)
-\end{equation} where $f$ is an \textit{interaction function} that maps model parameters to the predicted feedback $\hat{r}_{ui}$ and $\Theta$ denotes model parameters to be estimated by a learning algorithm \cite{10.1145/3038912.3052569}.
+    \hat{r}_{ui} = \mathcal{F}(u,i|\Theta)
+\end{equation} where $\mathcal{F}$ is an \textit{interaction function} that maps users and items latent factors $\mathbf{p}_u$ and $\mathbf{q}_i$, respectively, to the predicted feedback $\hat{r}_{ui}$, as $\Theta$ denotes a model's parameters to be obtained by a learning algorithm \cite{10.1145/3038912.3052569}.
+
+The way these latent factors are combined vary from model to model, but two main approaches arise from recent literature: they can either be combined through dot product or learned similarity. Each of these scenarios are depicted in Figure \ref{fig:latent_factors}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{figs/latent_factors.png}
+    \caption{Users and items embeddings can be combined to estimate users' feedback through dot product (left) or learned similarities (right).}
+    \label{fig:latent_factors}
+\end{figure}
 
 %Besides the model definition for learning $\Theta$, different approaches of objective function have been proposed in past literature, most of them fitting in one of two categories: point-wise and pair-wise objective functions [REF CF AUTOENCODERS].
 
-Several approaches have been suggested to represent users and items embeddings and how they are combined to generate feedback predictions, the most commonly ones being presented as follows.  
+Each of these approaches have their own model topologies and learning algorithms, which are presented as follows.
 
-\subsection{Multi-Layer Perceptron}
+%Several approaches have been suggested to represent users and items embeddings and how they are combined to generate feedback predictions, the most commonly ones being presented as follows.  
 
-Neural Collaborative Filtering
+
+
+
 
 \subsection{Matrix Factorization}
 
@@ -85,7 +96,45 @@ Neural Collaborative Filtering
         \min_{\mathbf{q}^*, \mathbf{p}^*} \sum_{(u,i) \in \mathcal{K}} (r_{ui} - \mathbf{q}^T_i \cdot \mathbf{p}_u)^2 + \lambda \Big(\sum_i n(i)||\mathbf{q}_i||^2 + \sum_u n(u)||\mathbf{p}_u||\Big)^2
     \end{equation} where $n(u)$ and $n(i)$ are the total number of interactions of user $u$ and item $i$, respectively.
 
-\subsubsection{Autoencoders}
+\subsection{Multi-Layer Perceptron}
+
+     Perceptrons are biological-inspired processing units that are composed by 3 basic elements: a sinapsis $\mathbf{w}$ that weights an entry $\mathbf{x}$, an aggregating function that adds a bias component $b$, and an activation function $\sigma: \mathbb{R} \rightarrow \mathbb{R}$ \cite{Rosenblatt58theperceptron}. Together, they form an output signal $y$ that can be defined as in Equation \label{eq:perceptron}.
+     
+     \begin{equation}
+        y = \sigma (\mathbf{w}^T \mathbf{x} + b)
+         \label{eq:perceptron}
+     \end{equation}
+     
+    When these processing units are combined to form layers which are then stacked, a network as shown in Figure \ref{fig:mlp} is created and called a Multi-Layer Perceptron (MLP)\abbrev{MLP}{Multi-Layer Perceptron}. 
+    
+    \begin{figure}[ht]
+        \centering
+        \includegraphics[width=\textwidth]{figs/mlp.png}
+        \caption{A MLP structure composed by an input, hidden and output layer.}
+        \label{fig:mlp}
+    \end{figure}
+    
+    Since multiple perceptrons are combined, one layer of a MLP can be defined as a function  $f: \mathbb{R}^{in} \rightarrow \mathbb{R}^{out}$ such that 
+    
+    \begin{equation*}
+        f_{\mathbf{W}, \mathbf{b}}(\mathbf{x}) = \sigma(\mathbf{W}\mathbf{x} + \mathbf{b}), \sigma(\mathbf{z}) = [\sigma(z_1), \sigma(z_2), \ldots, \sigma(z_{out})]
+        \label{eq:layer}
+    \end{equation*} which is parameterized by $\textbf{W} \in \mathbb{R}^{in \times out}$ and $\mathbf{b} \in \mathbb{R}^{out}$. The final definition of a MLP transfer function with $L$ layers is defined in Equation \ref{eq:mlp}.
+    
+    \begin{equation}
+        f^{MLP}(\mathbf{x}) = f_{\mathbf{W_L}, \mathbf{b_L}}(\ldots f_{\mathbf{W_2}, \mathbf{b_2}}(f_{\mathbf{W_1}, \mathbf{b_1}} (\mathbf{x}))\ldots)
+        \label{eq:mlp}
+    \end{equation}
+    
+    It has been shown that such structure can serve as an universal function approximator if enough layers and/or processing units are provided \cite{10.5555/521706}. When applied to RS, they are used to learn interaction functions $\mathcal{F}$. Namely, one the most commonly used neural-based structures is the Neural Collaborative Filtering (NCF) \abbrev{NCF}{Neural Collaborative Filtering} \cite{10.1145/3038912.3052569}, which is defined as follows.
+    
+    Let $\mathbf{x} = [\mathbf{p}_u, \mathbf{q}_i]$ be the concatenation of users and items embeddings. In that case, Equation \ref{eq:latent_factor_models} results in
+    
+    \begin{equation*}
+        \hat{r}_{ui} = \mathcal{F}(u,i|\Theta) = f_{\mathbf{W}_l, \mathbf{b}_l}(\ldots f_{\mathbf{W}_1, \mathbf{b}_1}([\mathbf{p}_u, \mathbf{q}_i]) \ldots)
+    \end{equation*}
+
+    \subsection{Autoencoders}
 
 
 
