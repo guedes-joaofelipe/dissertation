@@ -56,7 +56,7 @@ Each of these approaches have their own model topologies and learning algorithms
     
     The goal of the learning algorithm is to estimate the parameters of $\mathbf{p}_u$ and $\mathbf{q}_i$. However, since most of the user-item interactions in $\mathbf{R}$ are unknown, the algorithm can only take into account the error associated with known entries of the matrix. Furthermore, in this set there are at least $(|\mathcal{U}|+|\mathcal{I}|)\cdot f$ parameters to be learned using at most $|\mathcal{U}|\cdot |\mathcal{I}|$ interactions, which is hardly the usual scenario since users most often interact with a small number of items. As a consequence, the learning algorithm needs to find a considerable number of parameters using few training samples, making over-fitting a problem to be dealt with \cite{2008ALSWR}.
     
-   Several model definitions for learning $\Theta$ $\mathbf{p}_u$ and $\mathbf{q}_i$ have been proposed in past literature, each containing their own objective function. Hence, the most commonly used are defined as follows.
+   Several model definitions for learning $\Theta$, $\mathbf{p}_u$ and $\mathbf{q}_i$ have been proposed in past literature, each containing their own objective function. Hence, the most commonly used are defined as follows.
    
    \subsubsection{Alternating Least Squares}
     

@@ -1,4 +1,4 @@
-In this chapter, the theoretical background on RS is presented. A brief history of its early applications is depicted, followed by the core objective of the recommendation problem, its technical structures and classical topologies. Finally, different aspects of RS evaluations is presented.
+In this chapter, the theoretical background on RS is presented. A brief history of its early applications is described, followed by the core objectives of the recommendation problem, its technical structures and classical topologies. Finally, different aspects of RS evaluations are presented.
 
 \section{Brief History}
 
@@ -8,7 +8,7 @@ In this chapter, the theoretical background on RS is presented. A brief history 
 
     By the 2000s the business impact of such systems started drawing attention after    \textit{Amazon.com} launched its online retailer store, whose revenue heavily relied on its recommendation engine. E-commerce companies then saw the strategic value of RS in such a way that, in 2007, \textit{Netflix} launched an open challenge rewarding 1 million dollars to the first team who managed to improve its recommendation engine in $10 \%$. More than 5000 teams registered for the competition and only in 2009 was the goal achieved by a group of researches, being a turning point in RS research \cite{2007TheNetflixPrize}.
     
-    Despite bringing academic research forward, one of the consequences of the challenge was to steer  the focus of research to the task of estimating users' preferences of unseen items or to provide users with ranked item lists. However, in practice RS can serve a variety of purposes other than these tasks and, therefore, a broader overview of the recommendation problem is needed in order to understand its true value.
+    Despite bringing academic research forward, one of the consequences of the challenge was to steer the focus of research to the task of estimating users' preferences on unseen items or to provide users with ranked item lists. However, in practice RS can serve a variety of purposes other than these tasks and, therefore, a broader overview of the recommendation problem is needed in order to understand its true value.
 
   \section{The Recommendation Problem}
 
@@ -21,7 +21,7 @@ In this chapter, the theoretical background on RS is presented. A brief history 
     
     In other words, this problem is formed by three components: an overall goal, a set of actions and     an optimization time-frame. 
 
-    The \textbf{overall goal} represents a set of measures to be optimized by the RS. Traditionally, they are designed as accuracy or ranking metrics, such as precision and recall. However, measurable key performance indicators (KPI) \abbrev{KPI}{key performance indicators} have also been used to define RS optimization goals that are more oriented towards business values, such as click-through rate, conversion, revenue and sales distribution  \cite{2019BusinessValue}.
+    The \textbf{overall goal} represents a set of measures to be optimized by the RS. Traditionally, they are designed as accuracy or ranking metrics, such as precision and recall. However, measurable Key Performance Indicators (KPI) \abbrev{KPI}{key performance indicators} have also been used to define RS optimization goals that are more oriented towards business values, such as click-through rate, conversion, revenue and sales distribution  \cite{2019BusinessValue}.
 
     % As we can see, the business value of RS has grown over the years as more companies apply personalizations
     % as a strategy to improve their relationship with customers. Although is not always feasible to 
@@ -34,7 +34,7 @@ In this chapter, the theoretical background on RS is presented. A brief history 
     %     \label{fig:business_value}
     % \end{figure}
     
-    \textit{Click-through rate} (CTR) \abbrev{CTR}{click-through rate}, for instance, is commonly used as a KPI in news recommendations as it measures the fraction of recommended items that were clicked. In \cite{2007GoogleNews} the authors show that personalized recommendations on Google's news personalization engine led to an increase in clicks by $38\%$ compared to a baseline that only recommends popular items. 
+    \textit{Click-through rate} (CTR)\abbrev{CTR}{click-through rate}, for instance, is commonly used as a KPI in news recommendations as it measures the fraction of recommended items that were clicked. In \cite{2007GoogleNews} the authors show that personalized recommendations on Google's news personalization engine led to an increase in clicks by $38\%$ compared to a baseline that only recommends popular items. 
 
     % However, merely acessing a recommended item only grasps users' awareness towards products. In terms of appeal, 
     % \textit{Adoption and conversion} are applied measurements that 
@@ -53,46 +53,44 @@ In this chapter, the theoretical background on RS is presented. A brief history 
     % \textit{Netflix}, for example, disclosed that ``75\%'' of what people watch is from some sort of recommendation, later 
     % revealing that the recommendation engine business value is estimated on 1 billion US dollars per year \cite{2017Beyond5stars, 2010YoutubeVideoRS}.
 
-    Besides presenting a list of recommended items, a \textbf{set of actions} concerning human-computer interface also needs consideration when designing a RS. It is known that the design to which items as presented plays a fundamental role in recommendation efficiency \cite{2012UserExperience}, so displaying suggestions in a proper frame is also part of the systems' design. 
+    Besides presenting a list of recommended items, a \textbf{set of actions} concerning human-computer interface also needs consideration when designing a RS. It is known that the design to which items are presented plays a fundamental role in recommendation efficiency, so displaying suggestions in a proper frame is also part of the systems' design \cite{2012UserExperience}.
     
     Furthermore, the RS might also have better conversational features towards users other than merely receiving ratings and presenting items. Examples of such interactions are: wish-lists, explanations about recommendations and complementary proposals. This puts the user more into control and also   allows for new types of interactions \cite{2016BeyondMatrixCompletion}.  
 
-    Finally, the \textbf{optimization time-frame} over which the goal should be optimized allows to differentiate between one-shot interactions and longer or event repeated time frames. Such component varies in different business application. For instance, in music streaming applications, recommendations might need to be repeated whereas in e-commerce or news portal scenarios the anonymous users require smaller time-frames be considered. 
+    Finally, the \textbf{optimization time-frame} over which the goal should be optimized allows to differentiate between one-shot interactions and longer or even repeated time frames. Such component varies in different business application. For instance, in music streaming applications, recommendations might need to be repeated whereas in e-commerce or news portal scenarios the anonymous users require smaller time-frames to be considered. 
 
     Once these three components are set, an algorithm can be designed to meet these requirements. Most of them follows a data structure which is traditionally implemented as follows.
 
 \section{Structure}
-    For all the following sections, let $\mathcal{U}$ be the set of users with size $|\mathcal{U}|$ and $\mathcal{I}$ be the set of items with size $|\mathcal{I}|$, where each user and item can be represented by their features vectors $\mathbf{u}$ and $\mathbf{i}$, respectively. Consequently, consider that $\mathbf{R}$ denotes an utility matrix where each element $r_{ui}$ represents a feedback between user $u$ and item $i$. 
+    For all the following sections, let $\mathcal{U}$ be the set of users and $\mathcal{I}$ be the set of items, where each user and item can be represented by their feature vectors $\mathbf{u}$ and $\mathbf{i}$, respectively. Also, consider $\mathcal{I}_u$ the set of items that user $u$ has interacted with, whereas  $\mathcal{U}_i$ is the set of users who interacted with item $i$. Since some users do not provide feedback to the system, $\mathcal{U}^+$ is the set of users who have at least one interaction - analogously, $\mathcal{I}^+$ is the set of items with interactions. 
     
-    $b_ui, \mu, b_i, b_u, \mathcal{I}_u, \mathcal{U}_i, \mathcal{U}^+, \mathcal{I}^+$
-
-    In a personalized recommendation, the relationship between users and items is commonly represented in a utility-matrix $\mathbf{R}$ as shown in Equation \ref{eq:MatrizUtilidade}
+    Therefore, the relationship between users and items can be represented by an utility-matrix $\mathbf{R} \in \mathbb{R}^{|\mathcal{U}| \times |\mathcal{I}|}$ as shown in Equation \ref{eq:MatrizUtilidade}
     
     \begin{equation}
-        \mathbf{R}_{|\mathcal{U}| \times |\mathcal{I}|} = 
+        \mathbf{R} = 
         \kbordermatrix{ & i_1 & i_2 & \ldots & i_{|\mathcal{I}|} \\
         	u_1 & r_{11} & r_{12} & \ldots & r_{1|\mathcal{I}|} \\
         	u_2 & r_{21} & r_{22} & \ldots & r_{2|\mathcal{I}|}\\      
         	\vdots & \vdots & \vdots & \ddots & \vdots\\
         	u_{|\mathcal{U}|} & r_{|\mathcal{U}|1} & r_{\mathcal{U}2} & \ldots & r_{|\mathcal{U}||\mathcal{I}|}\\} \qquad
         \label{eq:MatrizUtilidade}      
-    \end{equation} where the element $r_{ui}$ is usually measured by a feedback system, traditionally being one of the two types: explicit and implicit feedback.
+    \end{equation} where the element $r_{ui} \in \mathbb{R}$ is measured by a feedback system, traditionally being one of the two types: explicit or implicit feedback.
     
-    Explicit feedback are inputs that users intentionally give through an interface, such as rating stars or thumbs-up/thumbs-down buttons. Given that users do not usually rate all items in a catalog (or even the ones that they consumed), this kind of feedback leads to a rather sparse utility matrix, affecting the quality of recommendation \cite{2010Handbook}. 
+    Explicit feedback are inputs that users intentionally provide through an interface, such as rating stars or thumbs-up/thumbs-down buttons. Since users do not usually rate all items in a catalog (or even the ones that they consume), this kind of feedback leads to a rather sparse utility matrix, affecting the quality of recommendation \cite{2010Handbook}. 
     
     On the other hand, implicit feedback is usually obtained by measuring users' behaviour in a digital-based platform, such as session time, clicks or page-views. Although leading to a less sparse utility matrix, this type of feedback might generate noisy data as these measurements do not differentiate whether the user is actually consuming the item or not. For instance, when a user access a news page he does not necessarily reads it \cite{2008ImplicitFeedback}.
     
-    A hybrid feedback might also be implemented as shown in \cite{2015RSPrinciples}. Additionally, some implementations of the utility matrix store other user- or item-related data, such as users' meta-data. These particularities shall be described for each algorithm in the next chapter. 
+    A hybrid feedback might also be implemented as shown in \cite{2015RSPrinciples}. Additionally, some implementations of the utility matrix store other user- or item-related data, such as users' meta-data. These particularities shall be described for each recommendation algorithm in Chapter \ref{chap:3}. 
     
     Once a data model is structured, one of the commonly used goals of the RS is to predict the missing entries from the matrix. To that end, three filtering topologies are traditionally used: content-based filtering, collaborative filtering and hybrid filtering. 
 
 \subsection{Content-Based Filtering}
 
-    Content-based Filtering (CB) \abbrev{CB}{Content-based Filtering} is a family of methods that, at their core, seeks to match users and items by their features. The focus is to use these features to raise users' consumption profiles, creating vector representations of the types of items they are leaned to consume, and computing items similar to that consumption vector \cite{2016Textbook}.
+    Content-based Filtering (CB) \abbrev{CB}{Content-based Filtering} is a family of methods that, at their core, seeks to match users and items by their features. The focus is to use these features to raise users' consumption profiles, creating vector representations of the types of items they are leaned to consume and computing items similar to that consumption vector \cite{2016Textbook}.
     
-    In this set, only the target-user's interactions with the system are necessary, disregarding other users' behaviours. The positive impact of such architecture is that less information about the user is needed to infer his preferences. For instance, if a child searches for a movie to watch on a streaming platform, kids-oriented items can be suggested based on his demographic feature. It has also been proven that this is an effective way to reduce the \textit{item cold-start}, since the item's feature might be sufficient for it to start being recommended \cite{10.1145/564376.564421}. Also, by using the features of items to build a recommendation list, it provides transparency and explanations on why that item is being suggested, which has also been proven to be a contributing factor to build users' trust in the system \cite{10.1145/1111449.1111475}.
+    In this case, only the target-user's interactions with the system are necessary, disregarding other users' behaviours. The positive impact of such architecture is that less information about the user is needed to infer his preferences. For instance, if a child searches for a movie to watch on a streaming platform, kids-oriented items can be suggested based on demographic features. It has also been proven that this is an effective way to reduce the \textit{item cold-start}, since the item's feature might be sufficient for it to start being recommended \cite{10.1145/564376.564421}. Also, by using the features of items to build a recommendation list, it provides transparency and explanations on why that item is being suggested, which has also been proven to be a contributing factor to build users' trust in the system \cite{10.1145/1111449.1111475}.
 
-    On the opposite direction, a major drawback of such topology is that CB tends to recommend the same types of items - commonly known as the \textit{bubble effect} - and thus it suffers from overspecialization, which has been tackled by increasing serendipity in the RS \cite{10.1109/HIS.2008.25}. Furthermore, some applications may not easily provide items' or users' features and therefore poor representations are extracted. Examples of such limitations occur on video, audio or image recommendation, such as the one used at the \textit{Music Genome Project} \cite{2009MFTechniques} employed by the online radio service \textit{Pandora.com}.
+    On the opposite direction, a major drawback of such topology is that CB tends to recommend the same types of items - commonly known as the \textit{bubble effect} - and thus it suffers from overspecialization, which has been tackled by increasing serendipity in the RS \cite{10.1109/HIS.2008.25}. Furthermore, some applications may not easily provide items' or users' features and therefore poor representations are extracted. Examples of such limitations occur on video, audio or image recommendation, such as the one used at the \textit{Music Genome Project} employed by the online radio service \textit{Pandora.com}  \cite{2009MFTechniques}.
 
 \subsection{Collaborative Filtering}
 \label{sec:CF}
@@ -150,12 +148,12 @@ Nevertheless, due to the broad usage of prediction accuracy as a way to evaluate
 
 \subsubsection{Rating Prediction Accuracy}
 
-In applications where explicit feedback is provided, a property to be measure in a RS is its capacity to estimate accurately the user's rating. One of the most popular metrics used for such objective is the Root Mean Squared Error (RMSE) \abbrev{RMSE}{Root Mean Squared Error} defined in Equation \ref{eq:rmse}.
+In applications where explicit feedback is provided, a property to be measure in a RS is its capacity to estimate accurately the user's rating. One of the most popular metrics used for such objective is the Root Mean Squared Error (RMSE) \abbrev{RMSE}{Root Mean Squared Error} defined in Equation \ref{eq:rmse}
 
 \begin{equation}
 \label{eq:rmse}
     RMSE = \sqrt{\frac{1}{|\mathcal{U}| \cdot |\mathcal{I}|}\sum_{(u,i) \in \mathcal{K}}(r_{ui} - \hat{r}_{ui})^2}
-\end{equation}
+\end{equation} where $\mathcal{R}$ is the set of all known user-item interaction pairs.
 
 \subsubsection{Usage Prediction Accuracy}
 
@@ -188,7 +186,7 @@ Recall@K = \frac{\#TP}{\#TP + \#FN}
 
 Usually applied in the evaluation of search query engines, ranking measures are also employed to acess the quality of a RS when the order of items is essential to system, being the case where users have to browse through tracks or pages of items, for example. In these applications, the aim is to predict not necessarily the explicit feedback but rather the order of the items according to users' preferences. 
 
-A direct way of computing the effectiveness of ranking is through the Mean Reciprocal Rank (MRR) \abbrev{MRR}{Mean Reciprocal Rank} as defined in Equation \ref{eq:mrr}
+Let $\mathcal{R}$ be a ranked list of recommendations. A direct way of computing the effectiveness of ranking is through the Mean Reciprocal Rank (MRR) \abbrev{MRR}{Mean Reciprocal Rank} as defined in Equation \ref{eq:mrr}
 
 \begin{equation}
 \label{eq:mrr}
