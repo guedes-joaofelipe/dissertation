@@ -82,7 +82,7 @@ In this chapter, the theoretical background on RS is presented. A brief history 
     
     A hybrid feedback might also be implemented as shown in \cite{2015RSPrinciples}. Additionally, some implementations of the utility matrix store other user- or item-related data, such as users' meta-data. These particularities shall be described for each recommendation algorithm in Chapter \ref{chap:3}. 
     
-    Once a data model is structured, one of the commonly used goals of the RS is to predict the missing entries from the matrix. To that end, three filtering topologies are traditionally used: content-based filtering, collaborative filtering and hybrid filtering. 
+    Once a data model is structured, one of the commonly used goals of the RS is to predict the missing entries from the matrix. To that end, two filtering topologies are traditionally used: Content-based Filtering and Collaborative Filtering. 
 
 \subsection{Content-Based Filtering}
 
@@ -95,7 +95,7 @@ In this chapter, the theoretical background on RS is presented. A brief history 
 \subsection{Collaborative Filtering}
 \label{sec:CF}
 
-    Collaborative Filtering (CF) \abbrev{CF}{Collaborative Filtering} is another popular family of techniques which underlies in the assumption     that users with similar relevance on past items will probably agree on evaluating future items the same way [REF, melhorar]. In that sense, users' relevance to items can be estimated by their peers' feedback.
+    Collaborative Filtering (CF) \abbrev{CF}{Collaborative Filtering} is another popular family of techniques which underlies in the assumption     that users with similar relevance on past items will probably agree on evaluating future items the same way. In that sense, users' relevance to items can be estimated by their peers' feedback.
 
     Given these characteristics of CF, two groups of methods are usually portrayed in the literature: the memory-based CF and the model-based CF \cite{2010Handbook}. 
 
@@ -117,17 +117,12 @@ In this chapter, the theoretical background on RS is presented. A brief history 
 
   \subsubsection{Model-based CF}
 
-  Model-based CF rely on data mining and machine learning methods to find underlying patterns on 
-  users' preferences based on their feedback (although users' and items' metadata can be also used to 
-  improve recommendation performance [REF]). 
+  Model-based CF rely on using past feedback values to train a model that learn an interaction function between users and items. Besides using feedback data, these types of techniques have been outperformed many other approaches by also using item's or user's metadata, which are useful tools for reducing cold-start issues.
 
-  [Vantagens]
+    To learn such interaction functions, most model-based techniques map both users and items to their respective latent factors in such a way that they can be compared in this latent factor space. To that end, matrix factorization is a classic approach which can be performed in many ways, such as in singular value decomposition or through a neural-based auto-encoder approach. Some of these structures and their learning algorithms shall be thoroughly described in Chapter \ref{chap:3}.
 
-  [Desvantagens]
-
-  [Exemplos]
-
-\subsection{Hybrid Topologies}
+    Finally, both CF and CB approaches can be mixed to form a hybrid recommendation algorithm that captures the best characteristics of the underlying structures. For instance, one can make an ensemble recommendation engine by weighting the output of different algorithms or by cascading the output of one into the input of another. Although robust, a hybrid RS tends to create a complex implementation as a major drawback, making it hard to be used in practical scenarios. A thorough explanation of hybrid recommendation methods are described in \cite{10.1023/A:1021240730564}.
+%\subsection{Hybrid Topologies}
 
 
 \section{Evaluation}

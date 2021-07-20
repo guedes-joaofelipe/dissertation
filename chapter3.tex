@@ -98,7 +98,7 @@ Each of these approaches have their own model topologies and learning algorithms
 
 \subsection{Multi-Layer Perceptron}
 
-     Perceptrons are biological-inspired processing units that are composed by 3 basic elements: a sinapsis $\mathbf{w}$ that weights an entry $\mathbf{x}$, an aggregating function that adds a bias component $b$, and an activation function $\sigma: \mathbb{R} \rightarrow \mathbb{R}$ \cite{Rosenblatt58theperceptron}. Together, they form an output signal $y$ that can be defined as in Equation \label{eq:perceptron}.
+     Perceptrons are biological-inspired processing units that are composed by 3 basic elements: a sinapsis $\mathbf{w}$ that weights an entry $\mathbf{x}$, an aggregating function that adds a bias component $b$, and an activation function $\sigma: \mathbb{R} \rightarrow \mathbb{R}$ \cite{Rosenblatt58theperceptron}. Together, they form an output signal $y$ that can be defined as in Equation \ref{eq:perceptron}.
      
      \begin{equation}
         y = \sigma (\mathbf{w}^T \mathbf{x} + b)
@@ -117,9 +117,9 @@ Each of these approaches have their own model topologies and learning algorithms
     Since multiple perceptrons are combined, one layer of a MLP can be defined as a function  $f: \mathbb{R}^{in} \rightarrow \mathbb{R}^{out}$ such that 
     
     \begin{equation*}
-        f_{\mathbf{W}, \mathbf{b}}(\mathbf{x}) = \sigma(\mathbf{W}\mathbf{x} + \mathbf{b}), \sigma(\mathbf{z}) = [\sigma(z_1), \sigma(z_2), \ldots, \sigma(z_{out})]
+        f_{\mathbf{W}, \mathbf{b}}(\mathbf{x}) = \sigma(\mathbf{W}\mathbf{x} + \mathbf{b})
         \label{eq:layer}
-    \end{equation*} which is parameterized by $\textbf{W} \in \mathbb{R}^{in \times out}$ and $\mathbf{b} \in \mathbb{R}^{out}$. The final definition of a MLP transfer function with $L$ layers is defined in Equation \ref{eq:mlp}.
+    \end{equation*} which is parameterized by $\textbf{W} \in \mathbb{R}^{in \times out}$ and $\mathbf{b} \in \mathbb{R}^{out}$. Notice that $\sigma(\cdot)$ becomes an element-wise mapping function such that $\sigma(\mathbf{z}) = [\sigma(z_1), \sigma(z_2), \ldots, \sigma(z_{out})]$. The final definition of a MLP transfer function with $L$ layers is defined in Equation \ref{eq:mlp}.
     
     \begin{equation}
         f^{MLP}(\mathbf{x}) = f_{\mathbf{W_L}, \mathbf{b_L}}(\ldots f_{\mathbf{W_2}, \mathbf{b_2}}(f_{\mathbf{W_1}, \mathbf{b_1}} (\mathbf{x}))\ldots)
@@ -134,10 +134,44 @@ Each of these approaches have their own model topologies and learning algorithms
         \hat{r}_{ui} = \mathcal{F}(u,i|\Theta) = f_{\mathbf{W}_l, \mathbf{b}_l}(\ldots f_{\mathbf{W}_1, \mathbf{b}_1}([\mathbf{p}_u, \mathbf{q}_i]) \ldots)
     \end{equation*}
 
-    \subsection{Autoencoders}
+    \subsection{Auto-encoders}
 
+    Given the flexibility of the previous MLP structure, one can take a non-linear approach of matrix factorization by setting a neural network to reconstruct its input signal, creating the so-called auto-encoder \cite{10.5555/2976456.2976476}. A classical auto-encoder, typically implemented with a single hidden layer, takes an input vector $\mathbf{x}$ and maps it to a hidden representation $\mathbf{z} \in \mathbb{R}^K$ such that
+    
+    \begin{equation*}
+        \mathbf{z} = \sigma(\mathbf{W}\mathbf{x} + \mathbf{b})
+    \end{equation*}which configures an encoder step since it usually maps the input vector to a lower dimension representation. A posterior decoding step can thus be implemented by setting the conventional MLP output $\mathbf{y}$ to be a reconstructed version of the input $\mathbf{x}$:
+    
+    \begin{equation*}
+        \mathbf{y} = \hat{\mathbf{x}} = \sigma(\mathbf{W}'\mathbf{z} + \mathbf{b}')
+    \end{equation*} where $\mathbf{W}'$ and $\mathbf{b}'$ are the weights associated with the decoder, which may be constrained with the encoder weights such that $\mathbf{W}' = \mathbf{W}$.
+    
+    Notice that a well-trained auto-encoder would simply learn the identity function $\mathbf{y} = \mathbf{x}$, which is hardly the goal of a RS since there is no point in reconstructing the input missing values. In that sense, a Denoising Auto-encoder extends its classical structure by training to reconstruct a corrupted version $\Tilde{\mathbf{x}}$ of the input, which can be obtained through additive Gaussian noise or multiplicative mask-out/drop-out noise \cite{10.1145/1390156.1390294}. 
+    
+    In addition, auto-encoders permit the addition of multiple input representations. For instance, the input signal $\mathbf{x}$ can contain both items and users representations in the input nodes. A final structure employed in RS that contains all the aforementioned characteristics is presented as a Collaborative Denoising Auto-encoder (CDAE) \abbrev{CDAE}{Collaborative Denoising Auto-encoder} \cite{10.1145/2835776.2835837}, represented in Figure \ref{fig:cdae}.
+    
+   \begin{figure}[ht]
+        \centering
+        \includegraphics[width=\textwidth]{figs/cdae.png}
+        \caption{Structure of the Collaborative Denoising Auto-encoder.}
+        \label{fig:cdae}
+    \end{figure}
 
+    In CDAE, the input layer is composed by $|\mathcal{I}|$ item nodes which receives the signals from the corrupted vector $\Tilde{\mathbf{r}}_u = [\Tilde{r}_{u1}, \Tilde{r}_{u2}, \ldots \Tilde{r}_{u|\mathcal{I}|}]$, and a user-specific node whose weights correspond to the elements of the embedding $\mathbf{p}_u$. Thus, the encoder is composed by a weight matrix $\mathbf{W} \in \mathbb{R}^{|\mathcal{I}| \times K}$ that connects the item input nodes to the hidden layer, and a user-specific $\mathbf{p}_u \in \mathbb{R}^K$ vector. 
 
+    In addition to the $K$ nodes, the hidden layer contains a bias node. These hidden layer nodes are fully connected to the $|\mathcal{I}|$ nodes in the output layer through a weight matrix $\mathbf{W}' \in \mathbb{R}^{|\mathcal{I}| \times K}$ and a $\mathbf{b}' \in \mathbb{R}^{|\mathcal{I}|}$ vector. 
+    
+    Following the MLP equations, the CDAE initially maps the input to a latent representation $\mathbf{z}_u$ as:
+    
+    \begin{equation*}
+        \mathbf{z}_u = \sigma(\mathbf{W}^T \Tilde{\mathbf{r}}_{u} + \mathbf{p}_u + \mathbf{b})
+    \end{equation*} where $\sigma(\cdot)$ is usually the sigmoid function. Then, the output signal is computed as follows:
+    
+    \begin{equation*}
+        \hat{\mathbf{r}}_{u} = \sigma(\mathbf{W}'^T\mathbf{z}_u + \mathbf{b}')
+    \end{equation*}
+
+    As aforementioned, the learning algorithm should not take into account the error in reconstructing the missing inputs. Therefore, a modified version of MLP learning algorithms based on reconstruction errors can be employed to learn the parameters, which is thoroughly detailed in \cite{10.1145/2835776.2835837}.
 
 \section{Sparsity}
 
