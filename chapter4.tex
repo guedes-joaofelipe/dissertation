@@ -1,0 +1,74 @@
+In this chapter, the methodology applied to understand the relationship between sparsity and recommendation quality is described. After a brief introduction of the types of recommendation experiments, we define how multiple sparsity scenarios are created with temporal splits, how model parameters are set and which figures of merit are analyzed in this research. 
+
+\section{Types of Experiments}
+
+According to Shani et al. \cite{2011EvaluatingRS}, experiments to evaluate RS can be divided into 2 categories: offline, use-case and online experiments. 
+
+Offline experiments are applied using a dataset collected in a limited period of time and assuming that users' consumption behaviour do not change after the RS is set into production. The main advantage of this type of experiment is its low cost and risk since it does not involve interaction with users, making the most simple scenario for comparing different recommendation algorithms. The goal is to filter algorithms which perform poorly in offline metrics.
+
+After offline experiments are designed and implemented, algorithms can then be tested in use-cases with a small set of users who simulates their consumption behaviour. This type of experiment is used to contrast recommendation algorithms with with other variables that impact user experience like item display and user interface, all performed in a controlled environment. After a small group of users are assigned to different alternatives in A/B tests, each alternative having a unique recommendation strategy, not only their consumption is observed but also their browsing behaviour is registered through event signals like item clicking or page scrolling.
+
+After validating algorithms in use-cases, they are then set to online experiments where they are usually contrasted with another A/B test containing the current recommendation offer as control and the new proposals as alternatives. Although being the most robust type of experiment since it deals with user's feedback in large scale, online experiments are generally more expensive, since it need a production environment running for a period of time, and considerably riskier since it may affect user experience. 
+
+Despite this robust flow of algorithm testing, for the scope of this research only offline experiments are considered given the cost of applying these experiments in production environments. However, future work can be done with online experimentation where not only recommendation metrics are analyzed but also other key performance indicators like churn or retention rate.
+
+\section{Temporal Splits}
+
+Since RS are highly impacted by the flow of users and items to be considered, this research's methodology is based on applying temporal splits to define the train, validation and test sets. Figure \ref{fig:temporal_validation} exhibits how these splits are constructed.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{figs/temporal_validation.png}
+    \caption{Definition of temporal train, validation and test sets.}
+    \label{fig:temporal_validation}
+\end{figure}
+
+Without loss of generality, suppose that at the end of week $j$ the RS needs to generate ranked lists for week $j+1$. In this scenario, all period $j-1$ previous to the start of week $j$ is considered as a training set for recommendation models, whereas week $j$ is used as a validation set to fine tune parameters after training. Once the model is trained and validated, recommendations are generated for week $j+1$ with new consumption data where its quality is measured according to multiple figures of merit.
+
+After measuring recommendation quality in this iteration $i-1$, the next iteration is set by sliding all considered time windows one week ahead. In that sense, for iteration $i$, we have the previous test set as the new validation set ($Validation_{i} = Test_{i-1}$) and the train set is accumulated with the previous validation set ($Train_{i} = Train_{i-1} \cup Validation_{i-1}$). Test set for iteration $i$ is composed by a new batch of data.
+
+This method was chosen so as to emulate a common scenario in RS with the arrival of new consumption data or the inclusion of new items to be recommended, which defines multiple sparsity scenarios and how they evolve as time goes by. The sliding window size can be chosen according to different applications and is influenced by the frequency of model retraining. For instance, for news recommendation where items may become obsolete after 24 hours, this sliding window can be set to a day since models need to be retrained. 
+
+\section{Model Tuning}
+%Hyperparametrizacao (falar que o MRR é a metrica principal)
+%Recbole
+
+
+\section{Figures of Merit}
+
+As models are tuned so as to maximize MRR@k, it is also the main figure of merit to be analyzed when compared to sparsity. However, complementary metrics are also obtained in order to analyze other aspects of recommendation quality such as item space coverage and the model's diversity. 
+
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage{multirow}
+% 
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage{multirow}
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}cc@{}}
+\toprule
+\textbf{Analysis}                            & \textbf{Figure of Merit} \\ \midrule
+\multirow{2}{*}{Ranking Prediction Accuracy} & MRR (main)               \\
+                                             & NDCG                     \\ \midrule
+\multirow{2}{*}{Usage Prediction Accuracy}   & Precision                \\
+                                             & Recall                   \\ \midrule
+Coverage                                     & Item Space Coverage       \\ \midrule
+Long-Tail                                    & Average Popularity       \\ \midrule
+Diversity                                    & GiniIndex                \\ \bottomrule
+\end{tabular}
+\caption{Recommendation figures of merit to be evaluated.}
+\label{tab:fig_merit}
+\end{table}
+In the scope of ranking prediction accuracy, besides MRR@k the NDCG@k is also obtained
+
+Ranking Prediction accuracy: MRR (metrica principal)
+
+Usage Accuracy: precision, recall (nao vamos usar rating prediction accuracy)
+
+Item Space Coverage: 
+
+Diversity: giniindex
+
+'recall@20', 'mrr@20', 'ndcg@20', 'hit@20', 'precision@20', 'itemcoverage@20', 'giniindex@20', 'map@20', 'shannonentropy@20'

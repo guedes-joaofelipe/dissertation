@@ -1,4 +1,25 @@
-This chapter focuses on describing the main technicalities of machine learning algorithms that are commonly used in RS and shall be tested in this research. Sparsity concepts are also presented in order to establish key definitions that support the proposed framework to evaluate sparsity effects on recommendation quality.
+This chapter focuses on describing the main technicalities of machine learning algorithms that are commonly used in RS and are tested in this research. Sparsity concepts are also presented in order to establish key definitions that support the proposed framework to evaluate sparsity effects on recommendation quality.
+
+\section{The Learning Framework}
+
+The field of RS was developed in the intersection of machine learning and information retrieval due to the nature of recognizing consumption patterns in order to generate ranked lists of items. The emerging field of ``learning to rank" combined not only recommendation tasks, but also applications like document retrieval [REF 58], sentiment analysis [REF 94] and key term extraction [REF 30]. Therefore, most of the recommendation models work under the following learning-to-rank framework [REF LEARNING TO RANK]. 
+
+Given an ideal and unknown target function $\mathcal{G}(u, i)$ that models user $u$ preference score to item $i$, the learning to rank process aims at finding an approximate function $\mathcal{F}$ such that 
+
+\begin{equation}
+    \mathcal{G}(u, i) \approx \mathcal{F}(u, i | \Theta)
+\end{equation} where $\Theta$ are parameters that defines $\mathcal{F}$ and best approximates it to $\mathcal{G}$. These optimal parameters are estimated using 4 components: a training set, a hypothesis space, a loss function and a learning algorithm.
+
+
+The training set contains a number of independent and identically distributed past interactions $r_{ui}$ from users to items which are used as ground truth to predicted preference scores $\hat{r}_{ui}$.
+
+The hypothesis space contains a class of functions that maps users and items to a preference score. In that sense, each configuration of parameters $\Theta$ defines a hypothesis function $\mathcal{F}$ which is ruled according to several models, like neural networks and matrix factorization. Some of these models are defined in the following section.
+
+The loss function $\mathcal{L}(\cdot)$ measures to what degree the prediction generated from the hypothesis function $\mathcal{F}$ is in accordance with the target ground truth. Some of the loss functions are the evaluation measures defined in Section \ref{sec:evaluation}, like the RMSE and Recall@K, or or other functions used in classification problems like the logistic loss. 
+
+Finally, the learning algorithm is responsible for iterating over multiple prediction trials and updating the parameters $\Theta$ in a way to minimize the loss function. The updates can be performed as new predictions are generated or according to a specified batch size, when a number of accumulated predictions are necessary in order to perform the update. Examples of learning algorithms are stochastic gradient descent, adam [REF ADAM] and learnBPR [REF BPR]. After a final hypothesis function is obtained, new and unseen examples from a test set can be used to generate new predictions. 
+
+These 4 components can be combined in a variety of ways. However, the specific types of models and their learning algorithms used in this research are described as follows.
 
 \section{Neighborhood Models}
 
@@ -23,7 +44,7 @@ In latent factor approaches, it is assumed that data can be described by an unde
 
 \begin{equation}
     \label{eq:latent_factor_models}
-    \hat{r}_{ui} = \mathcal{F}(u,i|\Theta)
+    \hat{r}_{ui} = \mathcal{F}(\mathbf{p}_u, \mathbf{q}_i|\Theta)
 \end{equation} where $\mathcal{F}$ is an \textit{interaction function} that maps users and items latent factors $\mathbf{p}_u$ and $\mathbf{q}_i$, respectively, to the predicted feedback $\hat{r}_{ui}$, as $\Theta$ denotes a model's parameters to be obtained by a learning algorithm \cite{10.1145/3038912.3052569}.
 
 The way these latent factors are combined vary from model to model, but two main approaches arise from recent literature: they can either be combined through dot product or learned similarity. Each of these scenarios are depicted in Figure \ref{fig:latent_factors}.
@@ -31,7 +52,7 @@ The way these latent factors are combined vary from model to model, but two main
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{figs/latent_factors.png}
-    \caption{Users and items embeddings can be combined to estimate users' feedback through dot product (left) or learned similarities (right).}
+    \caption{User and item embedding can be combined to estimate users' feedback through dot product (left) or learned similarities (right).}
     \label{fig:latent_factors}
 \end{figure}
 
@@ -47,16 +68,90 @@ Each of these approaches have their own model topologies and learning algorithms
 
 \subsection{Matrix Factorization}
 
-    Matrix factorization (MF) \abbrev{MF}{Matrix Factorization} models map users and items to a joint latent factor space of dimensionality $f$ such that user-item interactions are modeled as inner products in that space. Formally, the feedback $r_{ui}$ in this case is estimated as in Equation \ref{eq:MF}
+    Matrix factorization (MF) \abbrev{MF}{Matrix Factorization} models map users and items to a joint latent factor space of dimensionality $f$ such that user-item interactions are modeled as inner products in that space. Formally, the score $r_{ui}$ in this case is estimated as in Equation \ref{eq:MF}
     
     \begin{equation}
         \label{eq:MF}
-        \hat{r}_{ui} = f(u,i|\mathbf{p}_u, \mathbf{q}_i) = \mathbf{p}_u^T \mathbf{q}_i = \sum_{k=1}^f p_{uk}q_{ik}
+        \hat{r}_{ui} = f^{MF}(u,i|\mathbf{p}_u, \mathbf{q}_i) = \mathbf{p}_u^T \mathbf{q}_i = \sum_{k=1}^f p_{uk}q_{ik}
     \end{equation} where each item $i$ and user $u$ are mapped as vectors (latent factors) $\mathbf{q}_i, \mathbf{p}_u \in \mathbb{R}^f$ and $f$ is a hyper-parameter to be chosen \cite{10.1145/3038912.3052569,2009MFTechniques}.
     
     The goal of the learning algorithm is to estimate the parameters of $\mathbf{p}_u$ and $\mathbf{q}_i$. However, since most of the user-item interactions in $\mathbf{R}$ are unknown, the algorithm can only take into account the error associated with known entries of the matrix. Furthermore, in this set there are at least $(|\mathcal{U}|+|\mathcal{I}|)\cdot f$ parameters to be learned using at most $|\mathcal{U}|\cdot |\mathcal{I}|$ interactions, which is hardly the usual scenario since users most often interact with a small number of items. As a consequence, the learning algorithm needs to find a considerable number of parameters using few training samples, making over-fitting a problem to be dealt with \cite{2008ALSWR}.
     
+    
+    
+    
    Several model definitions for learning $\Theta$, $\mathbf{p}_u$ and $\mathbf{q}_i$ have been proposed in past literature, each containing their own objective function. Hence, the most commonly used are defined as follows.
+   
+   \subsubsection{Bayesian Personalized Ranking for Matrix Factorization}
+   
+   Since recommendation can be seen as a ranking problem, instead of using point-wise loss functions to estimate the preference score $\hat{r}_{ui}$, the Bayesian Personalized Ranking (BPR) \abbrev{BPR}{Bayesian Personalized Ranking} is a loss function that accounts for pair-wise preferences using bayesian methods. 
+   
+   Let $>_u \subset \mathcal{I}^2$ be a personalized total ranking for user $u$ such that, for items $i, j \in \mathcal{I}$, $i >_u j$ indicates that $u$ prefers $i$ over $j$. Therefore, the goal of the learning algorithm is to maximize the posterior probability for all users in Equation \ref{eq:bpt_criterion}
+   
+   \begin{equation}
+       p(\Theta | >_u) \propto p( >_u | \Theta) p(\Theta)
+       \label{eq:bpt_criterion}
+   \end{equation} Here, two important assumptions are made. The first is that $u$ prefers any known item over unknown items. Therefore, the training set $\mathcal{T}$ can be defined as 
+   
+   \begin{equation}
+       \mathcal{T} := \{(u, i, j) | i \in \mathcal{I}_u \wedge j \in \mathcal{I} \setminus \mathcal{I}_u\}
+   \end{equation}Also, it is assumed that the ordering of each pair of items $(i, j)$ for a specific user is independent of the ordering of every other pair. Therefore, the likelihood term in Equation \ref{eq:bpt_criterion} can be defined as in Equation \ref{eq:bpr_individual}.
+   
+   \begin{equation}
+       \prod_{u \in \mathcal{U}} p(>_u | \Theta) = \prod_{(u, i, j) \in \mathcal{T}} p(i >_u j | \Theta)
+       \label{eq:bpr_individual}
+   \end{equation}The individual probability that a user prefers $i$ over $j$ is a function of $\hat{r}_{uij}(\Theta)$, the estimated pair-wise preference from a recommendation model. In its original formulation, this relationship is defined in terms of the sigmoid function $\sigma$, which yields in Equation \ref{eq:bpr_likelihood}
+   
+   \begin{equation}
+       p(i >_u j | \Theta) := \sigma(\hat{r}_{uij}(\Theta)) = \Big(1+e^{-\hat{r}_{uij}(\Theta)}\Big)^{-1}
+       \label{eq:bpr_likelihood}
+   \end{equation}
+   
+   As for the prior term in Equation \ref{eq:bpt_criterion}, it is assumed that parameters come from a normal distribution with zero mean and $\mathbf{\Sigma}_\Theta$ covariance matrix, which is set as $\mathbf{\Sigma}_\Theta = \lambda_\Theta \mathbf{I}$ so as to reduce the number of unknown parameters. Therefore, $p(\Theta)$ is drawn as in Equation \ref{eq:bpr_prior}.
+   
+   \begin{equation}
+       p(\Theta) \sim \mathcal{N}(0, \lambda_\Theta \mathbf{I})
+       \label{eq:bpr_prior}
+   \end{equation}
+   
+   By taking the log of the maximum posterior estimator in Equation \ref{eq:bpt_criterion} and using the definitions in Equations \ref{eq:bpr_likelihood} and \ref{eq:bpr_prior}, the BPR loss function is finally defined in Equation \ref{eq:bpr_loss}
+   
+   \begin{equation}
+       \begin{split}
+           BPR :&= \ln p(\Theta | >_u) \\
+                &= \ln \prod_{u \in \mathcal{U}} p( >_u | \Theta) p(\Theta) \\
+                &= \ln p(\Theta) \prod_{(u, i, j) \in \mathcal{T}} \sigma(\hat{r}_{uij}(\Theta)) \\
+                &= \sum_{(u, i, j) \in \mathcal{T}} \ln \sigma(\hat{r}_{uij}(\Theta)) + \ln p(\Theta) \\ 
+                &= \sum_{(u, i, j) \in \mathcal{T}} \ln \sigma(\hat{r}_{uij}(\Theta)) - \lambda_\Theta ||\Theta||^2
+       \end{split}
+       \label{eq:bpr_loss}
+   \end{equation} where $\lambda_\Theta$ are regularization parameters. In order to find the parameters $\Theta$ that optimizes the loss function, the derivative with respect to $\Theta$ is taken, which results in Equation \ref{eq:bpr_derivative}.
+   
+   \begin{equation}
+       \frac{\partial BPR}{\partial \Theta} \propto \sum_{(u,i,j) \in \mathcal{T}} \frac{-e^{-\hat{r}_{uij}}}{1+e^{-\hat{r}_{uij}}} \cdot \frac{\partial \hat{r}_{uij}}{\partial \Theta} - \lambda_\Theta \Theta
+       \label{eq:bpr_derivative}
+   \end{equation} The parameters can be updated iteratively with stochastic gradient descent by taking a sample $(u,i,j) \in \mathcal{T}$ randomly (uniformly distributed), the parameters are updated as in Equation \ref{eq:bpr_update}
+   
+   \begin{equation}
+       \Theta \leftarrow \Theta + \alpha \Bigg( \frac{e^{-\hat{r}_{uij}}}{1+e^{-\hat{r}_{uij}}} \cdot \frac{\partial \hat{r}_{uij}}{\partial \Theta} + \lambda_\Theta \Theta \Bigg)
+       \label{eq:bpr_update}
+   \end{equation} which can be applied to any recommendation model where $\frac{\partial \hat{r}_{uij}}{\partial \Theta}$ can be computed. 
+   
+   In particular, for the MF estimation defined in Equation \ref{eq:MF}, $\mathbf{p}_u$ and $\mathbf{q}_i$ are the model parameters. By defining 
+   
+   \begin{equation*}
+       \hat{r}_{uij} := \hat{r}_{ui} - \hat{r}_{uj}
+   \end{equation*}the partial derivative results in
+   
+   \begin{equation}
+       \frac{\partial \hat{r}_{uij}}{\partial \Theta} = 
+           \begin{cases}
+                (q_{if} - q_{jf}) & \text{if $\theta = p_{uf}$}\\
+                p_{uf} & \text{if $\theta = q_{if}$}\\
+                -p_{uf} & \text{if $\theta = q_{jf}$}\\
+                0 & \text{otherwise}
+            \end{cases}
+   \end{equation}
    
    \subsubsection{Alternating Least Squares}
     
@@ -172,6 +267,8 @@ Each of these approaches have their own model topologies and learning algorithms
     \end{equation*}
 
     As aforementioned, the learning algorithm should not take into account the error in reconstructing the missing inputs. Therefore, a modified version of MLP learning algorithms based on reconstruction errors can be employed to learn the parameters, which is thoroughly detailed in \cite{10.1145/2835776.2835837}.
+
+\section{Sequential Models}
 
 \section{Sparsity}
 
